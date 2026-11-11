@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wizard Central Toolkit — Showcase — MathSphere Nexus</title>
+<link rel="icon" href="seal.webp">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="site">
+    <img src="seal.webp" alt="MathSphere Nexus official corporate seal">
+    <span class="name">MathSphere Nexus</span>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="projects.html">Projects</a>
+      <a href="welcome.html">News</a>
+    </nav>
+  </header>
+
+  <h1>Wizard Central Toolkit</h1>
+  <p class="tagline">Showcase — the first completed MathSphere Nexus project.</p>
+  <p class="meta">Status: <strong>Available now — free</strong> · Apache 2.0 · Version 0.2.8 · 561 passing tests</p>
+  <hr class="rule">
+
+  <p>The Wizard Central Toolkit is a local-first command-line suite: a router plus 12 "wizards" — small, single-purpose tools that each do one job well, running entirely on your own machine. It is the free sampler of Wizard Central, published on PyPI.</p>
+
+  <code class="install">pip install wizard-central-toolkit</code>
+  <p class="buttons">
+    <a class="btn red" href="https://pypi.org/project/wizard-central-toolkit/">Get it on PyPI</a>
+    <a class="btn" href="https://github.com/rewardsbycode-eng/wizard-central-toolkit">View the code on GitHub</a>
+    <a class="btn dark" href="https://dev.to/rewardsbycode-eng/i-built-a-local-first-cli-toolkit-with-147-commands-and-a-gate-for-the-ai-thats-coming-next-6m6">Read the launch story on DEV</a>
+  </p>
+
+  <h2>The fleet</h2>
+  <p>One naming rule runs through the whole project: a command is what you type; the name is what the project is. Each wizard has a full canonical name — who it <em>is</em> — and a command — what you <em>type</em>. Both spellings of the command run: the short form (<code>codeguardwiz</code>) and the full name-command (<code>codeguard_wizard</code>).</p>
+
+  <table>
+    <tr><th>Canonical Name</th><th>You type</th><th>What it does</th></tr>
+    <tr><td>Wizarding Router</td><td><code>wiz</code></td><td>Routes what you type to the right wizard</td></tr>
+    <tr><td>Godfather Wizard</td><td><code>godfatherwiz</code></td><td>Fleet dispatcher + interactive REPL (39 slash command forms)</td></tr>
+    <tr><td>Code Guard Wizard</td><td><code>codeguardwiz</code></td><td>Static code audit, plain verdicts, optional local-model seat</td></tr>
+    <tr><td>Python Wizard</td><td><code>pythonwiz</code></td><td>Parse-only Python checks; secrets scan that redacts by default</td></tr>
+    <tr><td>Write Wizard</td><td><code>writewiz</code></td><td>Consent wall for file writes: propose, preview, commit, rollback</td></tr>
+    <tr><td>Read Wizard</td><td><code>readwiz</code></td><td>ALLOW / DENIED policy verdicts on raw shell commands</td></tr>
+    <tr><td>Debug Wizard</td><td><code>debugwiz</code></td><td>Traceback autopsy, error census, CI-ready JSON reports</td></tr>
+    <tr><td>Diff Wizard</td><td><code>diffwiz</code></td><td>File/directory diffs, word-level diffs, honest verdicts</td></tr>
+    <tr><td>JSON Wizard</td><td><code>jsonwiz</code></td><td>Validate, pretty, compact, inspect, merge, structural diff</td></tr>
+    <tr><td>Banner Wizard</td><td><code>bannerwiz</code></td><td>ASCII banners — 571+ fonts found at runtime, 18 styles</td></tr>
+    <tr><td>Todo Wizard</td><td><code>todowiz</code></td><td>A personal work ledger: add, list, done, overdue, archive</td></tr>
+    <tr><td>Tmux Wizard</td><td><code>tmuxwiz</code></td><td>tmux session management</td></tr>
+    <tr><td>Rust Wizard</td><td><code>rustwiz</code></td><td>Rust file/project checks and crate builds</td></tr>
+  </table>
+  <p><strong>147 subcommands in all.</strong> The whole suite is Python standard library, apart from two small display libraries — no heavy stack to audit, install, or trust.</p>
+
+  <h2>Three rules the toolkit already lives by</h2>
+  <p><strong>Consent before change.</strong> The Write Wizard never just writes. It proposes a change, shows you the preview, and commits only on your yes — with backups and rollback if you change your mind. The Read Wizard exists for the opposite direction: before a shell command runs, it can return a plain ALLOW or DENIED.</p>
+  <p><strong>Redaction by default.</strong> The Python Wizard's <code>secrets</code> scan reports the file, the line, and the kind of secret — never the value. Printing the value is a deliberate opt-in flag, because a scan you paste into an issue tracker should not become the leak it was hunting.</p>
+  <p><strong>Honest verdicts.</strong> The tools say what they found in plain words, including when the answer is "this doesn't exist" or "I can't do that here."</p>
+
+  <h2>An honest note about hardware</h2>
+  <p>Code Guard's static audit runs anywhere. Its optional local-model seat (via Ollama) needs a machine that can run a small model at a reasonable speed: on a low-end Chromebook (Celeron, 2.7 GB RAM) a model audit ran past ten minutes unfinished, while a phone completed the same audit in about a minute. Guidance fixes confusion; it does not fix arithmetic. On a small machine, the static engine is the supported path, and the toolkit says so.</p>
+
+  <h2>Caveats, up front</h2>
+  <p>This is a young project — v0.2.8, one developer, first public release. The test suite stands at 561 passing tests, and the package on PyPI is exactly what the repo builds, but you may still find rough edges. If you do, I want to hear about them.</p>
+
+  <hr class="rule light">
+  <p class="slogan">A command is what you type. The name is what the project is.</p>
+  <img class="seal-sign" src="seal.webp" alt="MathSphere Nexus official corporate seal">
+</div>
+<footer class="site">© 2026 MathSphere Nexus</footer>
+</body>
+</html>
