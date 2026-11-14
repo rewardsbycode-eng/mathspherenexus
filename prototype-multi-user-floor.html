@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prototype: Many People, One Machine — The Floor — MathSphere Nexus</title>
+<link rel="icon" href="seal.webp">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MathSphere Nexus">
+<meta property="og:title" content="Prototype: Many People, One Machine — The Floor">
+<meta property="og:description" content="A working prototype of Wizard Central's multi-user floor: an author field on every creation, a hash-chained user log, a chat lifecycle, and deletion rights with edges. Built and tested November 13, 2026 — 19 of 19 checks passing.">
+<meta property="og:url" content="https://rewardsbycode-eng.github.io/mathspherenexus/prototype-multi-user-floor.html">
+<meta property="og:image" content="https://rewardsbycode-eng.github.io/mathspherenexus/seal.webp">
+<meta name="twitter:card" content="summary">
+<meta name="description" content="A working prototype of Wizard Central's multi-user floor: an author field on every creation, a hash-chained user log, a chat lifecycle, and deletion rights with edges. Built and tested November 13, 2026 — 19 of 19 checks passing.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="site">
+    <img src="seal.webp" alt="MathSphere Nexus official corporate seal">
+    <span class="name">MathSphere Nexus</span>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="projects.html">Projects</a>
+      <a href="prototypes.html">Prototypes</a>
+      <a href="diary.html">Diary</a>
+      <a href="blog.html">Blog</a>
+    </nav>
+  </header>
+
+  <h1>Many People, One Machine — The Floor</h1>
+  <p class="meta">A prototype of the Wizard Central Pro AI Modes Toolkit · <strong>Went into implementation: November 13, 2026</strong> · Built and tested the same day · Status: <strong>proof of shape</strong> — not the product build, which stands in the roadmap at Phase 6 (§6.7). The excerpts below are the prototype's actual code, not illustrations.</p>
+  <hr class="rule">
+
+  <h2>The idea</h2>
+  <p>A shared machine should know whose work is whose — without accounts, passwords, or anything for the added people to download. The design's floor layer is three small things:</p>
+  <p><strong>1. An author field on every creation.</strong> When a project is created, it carries its name, its classification, and its <strong>author</strong> — written into the record at that moment.</p>
+  <p><strong>2. A receipt chain underneath everything.</strong> Every act — a creation, an archive, a deletion — is appended to a hash-chained log. The log is the user log: read it by author, and you see who made what, and when.</p>
+  <p><strong>3. Deletion rights with edges.</strong> A user may delete <strong>their own chats</strong>, and nothing else on their own. <strong>Projects never delete on their own</strong> — a project is removed only by the machine owner's deliberate act, and the creator's work is exported first. Chats, and only chats, also live under a lifecycle: past a set count they are archived, and past a further count the oldest archives are deleted — every step receipted.</p>
+  <p>The prototype implements exactly that, in one standard-library Python file (172 lines), so the design can be tested instead of merely described.</p>
+
+  <h2>How it works</h2>
+
+  <h3>The receipt chain</h3>
+  <p>Every record carries the hash of the record before it. Change any earlier record — an author line, a date, anything — and verification fails, because the hashes no longer line up. That is what makes the record tamper-evident rather than merely stored:</p>
+  <pre>    def append(self, kind, **fields):
+        rec = {"seq": len(self.records) + 1, "ts": time.time(), "kind": kind}
+        rec.update(fields)
+        rec["prev"] = self.records[-1]["hash"] if self.records else "GENESIS"
+        rec["hash"] = _digest(dict(rec))
+        self.records.append(rec)
+        with self.path.open("a") as f:
+            f.write(json.dumps(rec) + "\n")
+        return rec
+
+    def verify(self):
+        prev = "GENESIS"
+        for i, rec in enumerate(self.records, 1):
+            if rec["seq"] != i or rec["prev"] != prev:
+                return False
+            body = {k: v for k, v in rec.items() if k != "hash"}
+            if _digest(body) != rec["hash"]:
+                return False
+            prev = rec["hash"]
+        return True</pre>
+
+  <h3>The author field</h3>
+  <p>Creation writes three lines and receipts them in the same motion — the author is part of the record from birth, not a label stuck on later:</p>
+  <pre>    def create_project(self, name, classification, author):
+        if name in self.projects:
+            raise ValueError(f"project already exists: {name}")
+        self.projects[name] = {
+            "name": name,
+            "classification": classification,
+            "author": author,
+        }
+        self.chain.append(
+            "project_created", project=name,
+            classification=classification, author=author,
+        )
+        self._save()
+        return self.projects[name]</pre>
+  <p>The user log needs no machinery of its own: it is this chain, filtered — by author, by project — and the authors summary is a count over the same records.</p>
+
+  <h3>The chat lifecycle (chats only)</h3>
+  <p>When a new chat arrives, the author's chats roll: the oldest active chats are archived past the active cap, and the oldest archived are deleted past the archive cap. Projects are never touched by this code path — there is no call in it that can reach a project:</p>
+  <pre>    def _lifecycle(self, author):
+        """Chats only: roll active -&gt; archived -&gt; deleted past the caps."""
+        mine = [c for c in self.chats.values() if c["author"] == author]
+        active = [c for c in mine if c["state"] == "active"]
+        archived = [c for c in mine if c["state"] == "archived"]
+        while len(active) &gt; self.active_cap:
+            oldest = active.pop(0)
+            oldest["state"] = "archived"
+            archived.append(oldest)
+            self.chain.append("chat_archived", chat=oldest["id"], author=author)
+        while len(archived) &gt; self.archive_cap:
+            oldest = archived.pop(0)
+            del self.chats[oldest["id"]]
+            self.chain.append(
+                "chat_deleted", chat=oldest["id"], author=author, via="lifecycle")</pre>
+  <p>In the prototype's tests the caps are set tiny — 3 active, 2 archived — so the roll is visible in a short run. In the design, the caps are settings.</p>
+
+  <h3>Deletion rights</h3>
+  <p>Two functions carry the whole policy. Deleting a chat requires the <strong>double-ask</strong> and requires that the deleter be the chat's own author:</p>
+  <pre>    def delete_chat(self, chat_id, by, double_asked=False):
+        """The one deletion a user holds on their own: their own chats.
+        Destructive: the double-ask is a call contract — no double-ask, no deletion."""
+        if not double_asked:
+            raise RuntimeError("double-ask required before deletion")
+        chat = self.chats[chat_id]
+        if chat["author"] != by:
+            raise PermissionError("a user deletes only their own chats")
+        del self.chats[chat_id]
+        self.chain.append(
+            "chat_deleted", chat=chat_id, author=chat["author"], by=by,
+            via="chat_owner")
+        self._save()</pre>
+  <p>Deleting a project requires the double-ask, the <strong>owner's</strong> act, and produces the creator's export <strong>before</strong> anything is removed:</p>
+  <pre>    def delete_project(self, name, by, owner=False, export_dir=None,
+                       double_asked=False):
+        """Existence rule: only the owner's act deletes a project, export first.
+        Destructive: the double-ask is a call contract — no double-ask, no deletion."""
+        if not double_asked:
+            raise RuntimeError("double-ask required before deletion")
+        if not owner:
+            raise PermissionError("a project is deleted only by the owner's act")
+        proj = self.projects[name]
+        export_file = None
+        if export_dir:
+            export_file = Path(export_dir) / f"{name}-export.json"
+            export_file.write_text(json.dumps(proj, indent=1))
+        del self.projects[name]
+        self.chain.append(
+            "project_deleted", project=name, author=proj["author"], by=by,
+            export=str(export_file) if export_file else None,
+        )
+        self._save()
+        return export_file</pre>
+  <p>The double-ask appears here as a <em>call contract</em>: a library cannot ask a person questions at a terminal, so the prototype enforces the shape — a deletion that does not arrive double-asked is refused outright. In the real build, the terminal asks the person twice; the contract underneath is this one.</p>
+
+  <h2>The evidence</h2>
+  <p>The prototype's test file runs every feature live. Result on November 13, 2026: <strong>19 checks, all passing.</strong></p>
+  <ul>
+    <li>author field on creation · search by author · authors summary</li>
+    <li>cross-user chat delete <strong>refused</strong> · chat delete without double-ask <strong>refused</strong> · own chat deleted</li>
+    <li>non-owner project delete <strong>refused</strong> · project delete without double-ask <strong>refused</strong> · project survives refused delete</li>
+    <li>lifecycle caps hold · lifecycle steps receipted · <strong>projects exempt from lifecycle</strong></li>
+    <li>export produced before delete · export carries the author's work · project deleted by owner act</li>
+    <li>log by author · log by project</li>
+    <li>chain verifies · <strong>tamper detected</strong> — the test edits a record's author line after the fact; verification catches it</li>
+  </ul>
+
+  <h2>The Terminal Record</h2>
+  <p>The dated terminal proof of the run above — the actual output, unedited — followed by its parse: how to use everything that was tested and proved.</p>
+  <pre>$ date
+Friday, November 13, 2026 — 17:39 PST
+$ python3 test_creations_prototype.py
+ok - author field on creation
+ok - search by author
+ok - authors summary
+ok - cross-user chat delete refused
+ok - chat delete without double-ask refused
+ok - own chat deleted
+ok - non-owner project delete refused
+ok - project delete without double-ask refused
+ok - project survives refused delete
+ok - lifecycle caps hold
+ok - lifecycle steps receipted
+ok - projects exempt from lifecycle
+ok - export produced before delete
+ok - export carries the author's work
+ok - project deleted by owner act
+ok - log by author
+ok - log by project
+ok - chain verifies
+ok - tamper detected
+
+all 19 checks passed</pre>
+  <p><strong>The parse — how each proved thing is used.</strong> To create with an author line, a project is created with three values — name, classification, author — and the receipt is written in the same motion (proved by <em>author field on creation</em>). To find a person's work, search by author, or read the log filtered by author or by project (<em>search by author</em>, <em>log by author</em>, <em>log by project</em>); to see everyone on the machine, take the authors summary. To delete a chat, its own author asks twice and calls the deletion — anyone else is refused, and a call without the double-ask is refused (<em>cross-user chat delete refused</em>, <em>chat delete without double-ask refused</em>, <em>own chat deleted</em>). To remove a project, only the owner calls it, double-asked, and an export file lands before the project does (<em>non-owner project delete refused</em>, <em>export produced before delete</em>, <em>project deleted by owner act</em>). To run the lifecycle, nothing is called at all: creating chats past the caps rolls the oldest through archive and deletion on its own, receipted at each step, and never touches a project (<em>lifecycle caps hold</em>, <em>lifecycle steps receipted</em>, <em>projects exempt from lifecycle</em>). To check the record itself, verification walks the chain (<em>chain verifies</em>) — and catches any later edit (<em>tamper detected</em>).</p>
+
+  <h2>The house check</h2>
+  <p><strong>Receipts, hash-chained</strong> — every act above is receipted, and the chain verifies. <strong>Double-ask on destructive acts</strong> — enforced as the call contract shown above. <strong>Standard library only</strong> — the prototype imports nothing outside Python's standard library. <strong>Demo discipline</strong> — this page is the documentation half; the test file is the live half.</p>
+
+  <h2>What this does not prove</h2>
+  <p>Honesty about scope: the prototype proves the floor's <em>shape</em> — authorship, the log, the lifecycle, the deletion rights — in miniature, with toy caps and plain files. It does not contain the hub layer (sign-ins, project passwords), the gate, or the broker; those are later prototypes in the roadmap's order. And an author line is a claim, not an authentication: on a trusted machine that is the design's deliberate trade — what the chain proves is that the record was not rewritten afterward.</p>
+  <p><a href="prototypes.html">← All prototypes</a></p>
+
+  <hr class="rule light">
+  <p class="slogan">A command is what you type. The name is what the project is.</p>
+</div>
+<footer class="site">© 2026 MathSphere Nexus</footer>
+</body>
+</html>
