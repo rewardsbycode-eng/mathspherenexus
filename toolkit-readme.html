@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wizard Central Toolkit — README — MathSphere Nexus</title>
+<link rel="icon" href="seal.webp">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MathSphere Nexus">
+<meta property="og:title" content="Wizard Central Toolkit — README">
+<meta property="og:description" content="The README of the Wizard Central Toolkit, version 0.2.8 — the project's own front door, as published in its repository.">
+<meta property="og:url" content="https://rewardsbycode-eng.github.io/mathspherenexus/toolkit-readme.html">
+<meta property="og:image" content="https://rewardsbycode-eng.github.io/mathspherenexus/seal.webp">
+<meta name="twitter:card" content="summary">
+<meta name="description" content="The README of the Wizard Central Toolkit, version 0.2.8 — the project's own front door, as published in its repository.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="site">
+    <img src="seal.webp" alt="MathSphere Nexus official corporate seal">
+    <span class="name">MathSphere Nexus</span>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="projects.html">Projects</a>
+      <a href="prototypes.html">Prototypes</a>
+      <a href="diary.html">Diary</a>
+      <a href="blog.html">Blog</a>
+    </nav>
+  </header>
+
+  <h1>Wizard Central Toolkit — README</h1>
+  <p class="meta">Version 0.2.8 — the README as published in the project's repository</p>
+
+  <h2>Wizard Central Toolkit (<code>wizard-central-toolkit</code>)</h2>
+
+  <blockquote>
+  <p><strong>The Sovereign Developer Utilities Fleet &amp; AI Router</strong><br>
+  Fast, local-first CLI tools built on the Python standard library, plus two small display libraries, designed for Linux development, system orchestration, and deterministic safety policy execution.</p>
+  </blockquote>
+
+  <p>License: Apache 2.0 — Validation suite: 13/13 passed — Python 3.10+.</p>
+
+  <p><code>wizard-central-toolkit</code> is a production-grade suite of 12 developer utilities that run locally with minimal overhead and deterministic output. Designed to operate standalone as individual CLI binaries or orchestrated through the <strong>Godfather Wizard</strong> and the <strong>Wizarding Router</strong> (<code>wiz</code>), every tool in this repository is fully functional, disk-verified, and CI-tested.</p>
+
+  <p><strong>Every command, documented:</strong> <a href="https://github.com/rewardsbycode-eng/wizard-central-toolkit/blob/main/COMMANDS.md">COMMANDS.md</a> lists all 13 primary commands — 25 entry points counting the 12 aliases — and 147 subcommands, each with what it does.</p>
+
+  <p><strong>See it run:</strong> <a href="https://github.com/rewardsbycode-eng/wizard-central-toolkit/blob/main/DEMO.md">DEMO.md</a> is the demo section — every feature tested live and documented from the real runs, from install check through the consent wall to the model codegen suite.</p>
+
+  <h2>Release history</h2>
+
+  <p>Full changelog is in <a href="https://github.com/rewardsbycode-eng/wizard-central-toolkit/blob/main/CHANGELOG.md">CHANGELOG.md</a>.</p>
+
+  <h3>0.2.8 — 2026-11-10</h3>
+  <ul>
+    <li><strong>Docs:</strong> this release history completed (0.2.4—0.2.7 added); CHANGELOG duplicate 0.2.5 entry removed; tagline corrected — the toolkit builds on the Python standard library plus two small display libraries; sampler roster count clarified (12 wizards ship here, 10 of them from the roster of 41).</li>
+    <li><em>No behavior changes.</em></li>
+  </ul>
+
+  <h3>0.2.7 — 2026-11-10</h3>
+  <ul>
+    <li><strong>Godfather Wizard:</strong> <code>generate_text()</code> — generation intents (poems, stories) take a lightweight model call and answer in seconds on CPU-only hardware, instead of riding the full tool-loop prompt.</li>
+    <li><strong>REPL:</strong> <code>/stream_on</code> and <code>/stream_off</code> toggles.</li>
+  </ul>
+
+  <h3>0.2.6 — 2026-11-10</h3>
+  <ul>
+    <li><strong>Godfather Wizard:</strong> the consent wall now reads verb + object — composing text ("write a poem", "delete the second stanza") passes free; mutating real files ("delete ~/x.py") still asks twice.</li>
+    <li><strong>Fixed:</strong> path-bearing read intents (<code>list /tmp</code>) route to the directory lister, not the oracle.</li>
+  </ul>
+
+  <h3>0.2.5 — 2026-11-10</h3>
+  <ul>
+    <li><strong>Godfather Wizard:</strong> the seat parser checks the live Ollama roster first — a colon-tagged local model (<code>better-tools:v4-cpu</code>) seats as a local model instead of being misread as a cloud provider.</li>
+    <li><strong>REPL:</strong> dynamic banner, fitted to the terminal on every launch.</li>
+  </ul>
+
+  <h3>0.2.4 — 2026-11-10</h3>
+  <ul>
+    <li><strong>Docs:</strong> detailed CHANGELOG; this release-history section added.</li>
+    <li><em>No behavior changes.</em></li>
+  </ul>
+
+  <h3>0.2.3 — 2026-11-10</h3>
+  <ul>
+    <li><strong>Fixed:</strong> Godfather Wizard — renamed a misleading variable in directory listing.</li>
+    <li><strong>Changed:</strong> Banner Wizard — removed duplicated mypy header and unused import.</li>
+    <li><strong>Docs:</strong> backfilled the missing 0.2.1 and 0.2.2 changelog entries.</li>
+    <li><em>No behavior changes.</em></li>
+  </ul>
+
+  <h3>0.2.2 — 2026-11-10</h3>
+  <ul>
+    <li><strong>CI only:</strong> bumped GitHub Actions (<code>checkout@v5</code>, <code>setup-python@v6</code>), pinned <code>ubuntu-24.04</code>. No package code changes.</li>
+  </ul>
+
+  <h3>0.2.1 — 2026-11-10</h3>
+  <ul>
+    <li><strong>Code Guard Wizard:</strong> JSON output from model audits, real Ollama errors surfaced, timeout raised to 300 s.</li>
+    <li><strong>mypy:</strong> all 71 source files type-clean (19 errors fixed).</li>
+    <li><strong>Tests:</strong> 560 passed.</li>
+  </ul>
+
+  <h3>0.2.0 — earlier</h3>
+  <ul>
+    <li>Initial public release baseline. See git history.</li>
+  </ul>
+
+  <h2>Fleet inventory &amp; command mapping</h2>
+
+  <p>All 12 wizard modules on disk are active, registered, and disk-verified:</p>
+
+  <table>
+    <tr><th>Wizard</th><th>Direct Executable</th><th>Central Alias</th><th>Primary Functionality &amp; Subcommands</th></tr>
+    <tr><td><strong>The Wizarding Router</strong></td><td><code>wiz</code></td><td><code>wiz</code></td><td>Central dispatcher &amp; alias router (<code>banner</code>, <code>codeguard</code>, <code>debug</code>, <code>diff</code>, <code>json</code>, <code>python</code>, <code>read</code>, <code>rust</code>, <code>tmux</code>, <code>todo</code>, <code>write</code>)</td></tr>
+    <tr><td><strong>Godfather Wizard</strong></td><td><code>godfather_wizard</code></td><td><code>wiz godfather_wizard</code></td><td>Grand Master fleet supervisor, deterministic task routing, interactive REPL cockpit, and the model codegen suite (<code>/brainstorm</code>, <code>/build</code>, <code>/debug</code>, <code>/diff</code>)</td></tr>
+    <tr><td><strong>Code Guard Wizard</strong></td><td><code>codeguard_wizard</code></td><td><code>wiz codeguard</code></td><td>Static security scanner (<code>audit</code>, <code>fix</code>, <code>lang</code>, <code>roster</code>, <code>scan</code>, <code>watch</code>, <code>severity</code>, <code>explain</code>, <code>scaffold</code>)</td></tr>
+    <tr><td><strong>Debug Wizard</strong></td><td><code>debug_wizard</code></td><td><code>wiz debug</code></td><td>Diagnosis oracle (<code>trace</code>, <code>locate</code>, <code>classify</code>, <code>hotspot</code>, <code>timeline</code>, <code>imports</code>, <code>suggest</code>, <code>audit</code>, <code>report</code>)</td></tr>
+    <tr><td><strong>Diff Wizard</strong></td><td><code>diff_wizard</code></td><td><code>wiz diff</code></td><td>Change-truth doctor (<code>files</code>, <code>dirs</code>, <code>context</code>, <code>summary</code>, <code>word</code>, <code>same</code>, <code>reverse</code>)</td></tr>
+    <tr><td><strong>JSON Wizard</strong></td><td><code>json_wizard</code></td><td><code>wiz json</code></td><td>Standalone JSON doctor (<code>validate</code>, <code>pretty</code>, <code>compact</code>, <code>inspect</code>, <code>keys</code>, <code>get</code>, <code>diff</code>, <code>stats</code>, <code>merge</code>)</td></tr>
+    <tr><td><strong>Python Wizard</strong></td><td><code>python_wizard</code></td><td><code>wiz python</code></td><td>Standalone Python parser &amp; health auditor (<code>check</code>, <code>outline</code>, <code>imports</code>, <code>complexity</code>, <code>loc</code>, <code>secrets</code>, <code>score</code>)</td></tr>
+    <tr><td><strong>Read Wizard</strong></td><td><code>read_wizard</code></td><td><code>wiz read</code></td><td>Read-only policy verb gate (<code>check</code>, <code>verbs</code>, <code>law</code>)</td></tr>
+    <tr><td><strong>Rust Wizard</strong></td><td><code>rust_wizard</code></td><td><code>wiz rust</code></td><td>Rust project checker (<code>check</code>, <code>build</code>, <code>run</code>, <code>test</code>, <code>clippy</code>, <code>fmt</code>, <code>doc</code>, <code>clean</code>, <code>law</code>, <code>version</code>)</td></tr>
+    <tr><td><strong>Tmux Wizard</strong></td><td><code>tmux_wizard</code></td><td><code>wiz tmux</code></td><td>Sovereign tmux session manager (<code>new</code>, <code>attach</code>, <code>kill</code>, <code>list</code>, <code>census</code>, <code>rename</code>, <code>capture</code>, <code>detach</code>, <code>law</code>, <code>version</code>)</td></tr>
+    <tr><td><strong>Todo Wizard</strong></td><td><code>todo_wizard</code></td><td><code>wiz todo</code></td><td>Task management wizard (<code>add</code>, <code>list</code>, <code>done</code>, <code>undo</code>, <code>note</code>, <code>oldest</code>, <code>overdue</code>, <code>stats</code>, <code>export</code>)</td></tr>
+    <tr><td><strong>Write Wizard</strong></td><td><code>write_wizard</code></td><td><code>wiz write</code></td><td>Consent wall for file writes (<code>propose</code>, <code>preview</code>, <code>commit</code>, <code>verify</code>, <code>rollback</code>, <code>protect</code>, <code>backups</code>)</td></tr>
+  </table>
+
+  <h2>Usage examples</h2>
+
+  <h3>1. The Wizarding Router (<code>wiz</code>) and the Godfather Wizard (<code>godfather_wizard</code>)</h3>
+
+  <p>Execute sub-tools via <code>wiz</code> or inspect fleet state with <code>godfather_wizard</code>:</p>
+
+  <pre># Execute sub-tools via alias
+wiz todo add "Refactor logger module"
+wiz json validate config.json
+
+# Godfather Wizard fleet supervision
+godfather_wizard census
+godfather_wizard status
+godfather_wizard repl</pre>
+
+  <p>Inside the REPL, the model-only codegen suite offers <code>/brainstorm</code> (hands-off conversation), <code>/build</code> and <code>/debug</code> (complete-content proposals shown as diffs and landed only after the double ask, through the Write Wizard), and <code>/diff</code> (review-only proposals). Per-task models are optional: <code>godfather_wizard models</code> shows the roster and assignments, and <code>godfather_wizard models set &lt;task&gt; &lt;model&gt;</code> stores them in <code>~/.godfather/models.json</code>.</p>
+
+  <p>Six providers can seat a model. Ollama is the local seat — no key, nothing leaves your machine. The other five (Meta (Muse), Anthropic, OpenAI, Google, and DeepSeek) are cloud seats you opt into with your own API key, read from your environment at call time; a seat is assigned as <code>provider:model</code> (for example <code>anthropic:claude-sonnet-4-5</code>). The toolkit stays local-first: nothing is sent anywhere unless you seat a cloud provider — and when you do, the prompts and, for <code>/build</code>, <code>/debug</code>, and <code>/diff</code>, the file contents involved go to that provider over HTTPS. Keys are never stored in the toolkit, never journaled, and never printed; <code>godfather_wizard models</code> reports only whether a key is set. <a href="https://github.com/rewardsbycode-eng/wizard-central-toolkit/blob/main/PROVIDERS.md">PROVIDERS.md</a> is the setup guide: where to get each provider's key, and how to install Ollama and pull your first local models.</p>
+
+  <h2>Wizard Central Pro AI Modes Toolkit — still in the making</h2>
+
+  <p>This free toolkit is the sampler: twelve local-first wizards under Apache 2.0, yours to use and build on.</p>
+
+  <p>Not in the sampler: the Truth Wizard, the Repair Wizard, the Ollama Wizard, the Whiteboard Wizard, the Manual Wizard, and the Boot Wizard. They are part of the <strong>Wizard Central Pro AI Modes Toolkit</strong>, still in the making: a fleet growing toward 41 wizards; 70 AI modes that advise; 23 guard modes that bind; seat cards that cast; creations of nine kinds — wizards, AI modes, tools, skills, tasks, guard modes, scripts, seat cards, and projects; a sealed locker (CVLT Arbiter) for a person's own creations; and a gated bridge that opens only by a person's yes, asked twice — and every crossing generates a receipt.</p>
+
+  <p>Pro is not released, and there is no signup yet. When it is ready, this page will say where to find it.</p>
+
+  <h2>The full roster — all 41 wizards</h2>
+
+  <p>Wizard Central's fleet counts 41 wizards. This sampler ships 12 wizards — 10 of them from that roster; the other 31 roster wizards live in the Wizard Central Pro AI Modes Toolkit, and the Tmux and Rust Wizards live only here.</p>
+
+  <table>
+    <tr><th>#</th><th>Wizard</th><th>Command</th><th>Where it lives</th></tr>
+    <tr><td>1</td><td>Banner Wizard</td><td><code>banner_wizard</code></td><td><strong>In this version</strong></td></tr>
+    <tr><td>2</td><td>Bash Wizard</td><td><code>bashwiz</code></td><td>Not in this version — only in Pro</td></tr>
+    <tr><td>3</td><td>Bootstrap Wizard</td><td><code>bootstrapwiz</code></td><td>Not in this version — only in Pro</td></tr>
+    <tr><td>4</td><td>Calendar Wizard</td><td><code>calendarwiz</code></td><td>Not in this version — only in Pro</td></tr>
+    <tr><td>5</td><td>Code Guard Wizard</td><td><code>codeguard_wizard</code></td><td><strong>In this version</strong></td></tr>
+    <tr><td>6</td><td>Command Line Wizard</td><td><code>commandlinewiz</code></td><td>Not in this version — only in Pro</td></tr>
+    <tr><td>7</td><td>Daemon Wizard</td><td><code>daemonwiz</code></td><td>Not in this version — only in Pro</td></tr>
+    <tr><td>8</td><td>Debug Wizard</td><td><code>debug_wizard</code></td><td><strong>In this version</strong></td></tr>
+    <tr><td>9</td><td>Diff Wizard</td><td><code>diff_wizard</code></td><td><strong>In this version</strong></td></tr>
+    <tr><td>10</td><td>Doc Wizard</td><td><code>docwiz</code></td><td>Not in this version — only in Pro</td></tr>
+    <tr><td>11</td><td>Dotfile Wizard</td><td><code>dotfilewiz</code></td><td>Not in this version — only in Pro</td></tr>
+    <tr><td>12</td><td>Exam Wizard</td><td><code>examwiz</code></td><td>Not in this version — only in Pro</td></tr>
+    <tr><td>13</td><td>Git Wizard</td><td><code>gitwiz</code></td><td>Not in this version — only in Pro</td></tr>
+    <tr><td>14</td><td>Grant Wizard</td><td><code>grantwiz</code></td><td>Not in this version — only in Pro</td></tr>
+    <tr><td>15</td><td>Help Wizard</td><td><code>helpwiz</code></td><td>Not in this version — only in Pro</td></tr>
+    <tr><td>16</td><td>JSON Wizard</td><td><code>json_wizard</code></td><td><strong>In this version</strong></td></tr>
+    <tr><td>17</td><td>Knowledge Wizard</td><td><code>knowledgewiz</code></td><td>Not in this version — only in Pro</td></tr>
+    <tr><td>18</td><td>Manual Wizard</td><td><code>manualwiz</code></td><td>Not in this version — only in Pro</td></tr>
+    <tr><td>19</td><td>Mapping Wizard</td><td><code>mappingwiz</code></td><td>Not in this version — only in Pro</td></tr>
+    <tr><td>20</td><td>MCP Wizard</td><td><code>mcpwiz</code></td><td>Not in this version — only in Pro</td></tr>
+    <tr><td>21</td><td>Mode-Manifesting Wizard</td><td><code>mode-manifestingwiz</code></td><td>Not in this version — only in Pro</td></tr>
+    <tr><td>22</td><td>Modelfile Wizard</td><td><code>modelfilewiz</code></td><td>Not in this version — only in Pro</td></tr>
+    <tr><td>23</td><td>Ollama Wizard</td><td><code>ollamawiz</code></td><td>Not in this version — only in Pro</td></tr>
+    <tr><td>24</td><td>Privacy Wizard</td><td><code>privacywiz</code></td><td>Not in this version — only in Pro</td></tr>
+    <tr><td>25</td><td>Python Wizard</td><td><code>python_wizard</code></td><td><strong>In this version</strong></td></tr>
+    <tr><td>26</td><td>Read Wizard</td><td><code>read_wizard</code></td><td><strong>In this version</strong></td></tr>
+    <tr><td>27</td><td>Repair Wizard</td><td><code>repairwiz</code></td><td>Not in this version — only in Pro</td></tr>
+    <tr><td>28</td><td>REPL Manager Wizard</td><td><code>repl-managerwiz</code></td><td>Not in this version — only in Pro</td></tr>
+    <tr><td>29</td><td>Requirements Wizard</td><td><code>requirementswiz</code></td><td>Not in this version — only in Pro</td></tr>
+    <tr><td>30</td><td>SQL Wizard</td><td><code>sqlwiz</code></td><td>Not in this version — only in Pro</td></tr>
+    <tr><td>31</td><td>Supreme Wizard</td><td><code>supremewiz</code></td><td>Not in this version — only in Pro</td></tr>
+    <tr><td>32</td><td>Test-Admission Wizard</td><td><code>test-admissionwiz</code></td><td>Not in this version — only in Pro</td></tr>
+    <tr><td>33</td><td>Todo Wizard</td><td><code>todo_wizard</code></td><td><strong>In this version</strong></td></tr>
+    <tr><td>34</td><td>Truthdwiz Wizard</td><td><code>truthdwiz</code></td><td>Not in this version — only in Pro</td></tr>
+    <tr><td>35</td><td>Truth Wizard</td><td><code>truthwiz</code></td><td>Not in this version — only in Pro</td></tr>
+    <tr><td>36</td><td>Voice Wizard</td><td><code>voicewiz</code></td><td>Not in this version — only in Pro</td></tr>
+    <tr><td>37</td><td>Whiteboard Wizard</td><td><code>whiteboardwiz</code></td><td>Not in this version — only in Pro</td></tr>
+    <tr><td>38</td><td>Write Wizard</td><td><code>write_wizard</code></td><td><strong>In this version</strong></td></tr>
+    <tr><td>39</td><td>Godfather Wizard</td><td><code>godfather_wizard</code></td><td><strong>In this version</strong></td></tr>
+    <tr><td>40</td><td>Bonus Wizard (planned)</td><td><code>bonuswiz</code></td><td>Not in this version — only in Pro</td></tr>
+    <tr><td>41</td><td>Keep Wizard (planned)</td><td><code>keepwiz</code></td><td>Not in this version — only in Pro</td></tr>
+  </table>
+
+  <p>Two of this sampler's own citizens do not appear on the roster. <strong>Tmux Wizard</strong> (<code>tmux_wizard</code>) — in Pro, its session features are absorbed into the Daemon Wizard's family, as an opt-in feature. <strong>Rust Wizard</strong> (<code>rust_wizard</code>) — discontinued in the Pro version; it ships in this free toolkit only.</p>
+
+  <h2>Names and aliases</h2>
+
+  <p>A wizard's name-command is its full underscored form — that is how each wizard is called by its whole name. The short form is an alias: installed, fully working, and interchangeable with the full form in every surface (same output, same exit codes). The router's full name is the Wizarding Router; its command is <code>wiz</code>.</p>
+
+  <table>
+    <tr><th>Wizard</th><th>Name-command</th><th>Alias</th></tr>
+    <tr><td>Godfather Wizard</td><td><code>godfather_wizard</code></td><td><code>godfatherwiz</code></td></tr>
+    <tr><td>Banner Wizard</td><td><code>banner_wizard</code></td><td><code>bannerwiz</code></td></tr>
+    <tr><td>Code Guard Wizard</td><td><code>codeguard_wizard</code></td><td><code>codeguardwiz</code></td></tr>
+    <tr><td>Debug Wizard</td><td><code>debug_wizard</code></td><td><code>debugwiz</code></td></tr>
+    <tr><td>Diff Wizard</td><td><code>diff_wizard</code></td><td><code>diffwiz</code></td></tr>
+    <tr><td>JSON Wizard</td><td><code>json_wizard</code></td><td><code>jsonwiz</code></td></tr>
+    <tr><td>Python Wizard</td><td><code>python_wizard</code></td><td><code>pythonwiz</code></td></tr>
+    <tr><td>Read Wizard</td><td><code>read_wizard</code></td><td><code>readwiz</code></td></tr>
+    <tr><td>Rust Wizard</td><td><code>rust_wizard</code></td><td><code>rustwiz</code></td></tr>
+    <tr><td>Tmux Wizard</td><td><code>tmux_wizard</code></td><td><code>tmuxwiz</code></td></tr>
+    <tr><td>Todo Wizard</td><td><code>todo_wizard</code></td><td><code>todowiz</code></td></tr>
+    <tr><td>Write Wizard</td><td><code>write_wizard</code></td><td><code>writewiz</code></td></tr>
+  </table>
+
+  <p><em>A command is what you type. The name is what the project is.</em></p>
+
+  <p class="meta">This is the project's README as published in its repository at version 0.2.8. The repository itself is at <a href="https://github.com/rewardsbycode-eng/wizard-central-toolkit">github.com/rewardsbycode-eng/wizard-central-toolkit</a>.</p>
+
+  <div class="article-foot">
+    <img class="article-seal" src="seal.webp" alt="MathSphere Nexus official corporate seal">
+  </div>
+
+  <footer>
+    <img class="foot-seal" src="seal.webp" alt="MathSphere Nexus official corporate seal">
+    <p>MathSphere Nexus — the parent company of Wizard Central.</p>
+    <p class="rule">A command is what you type. The name is what the project is.</p>
+    <p>Wizard Central Pro AI Modes Toolkit™ and MathSphere Nexus™ are trademarks of their owner. Wizard Central is not affiliated with Wiz, Inc.</p>
+  </footer>
+</div>
+</body>
+</html>
