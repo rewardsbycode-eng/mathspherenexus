@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prototype: The Start Lock — A Voluntary Door — MathSphere Nexus</title>
+<link rel="icon" href="seal.webp">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MathSphere Nexus">
+<meta property="og:title" content="Prototype: The Start Lock — A Voluntary Door">
+<meta property="og:description" content="A working prototype of a voluntary password door for a Wizard Central Pro installation: offered once at setup, never asked again after a decline, with five one-time recovery keys. Built November 13–14, 2026 — 26 of 26 checks passing, run by the owner on his own machine.">
+<meta property="og:url" content="https://rewardsbycode-eng.github.io/mathspherenexus/prototype-start-lock.html">
+<meta property="og:image" content="https://rewardsbycode-eng.github.io/mathspherenexus/seal.webp">
+<meta name="twitter:card" content="summary">
+<meta name="description" content="A working prototype of a voluntary password door for a Wizard Central Pro installation: offered once at setup, never asked again after a decline, with five one-time recovery keys. Built November 13–14, 2026 — 26 of 26 checks passing, run by the owner on his own machine.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="site">
+    <img src="seal.webp" alt="MathSphere Nexus official corporate seal">
+    <span class="name">MathSphere Nexus</span>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="projects.html">Projects</a>
+      <a href="prototypes.html">Prototypes</a>
+      <a href="diary.html">Diary</a>
+      <a href="blog.html">Blog</a>
+    </nav>
+  </header>
+
+  <h1>The Start Lock — A Voluntary Door</h1>
+  <p class="meta">A prototype of the Wizard Central Pro AI Modes Toolkit · <strong>Went into implementation: November 13, 2026</strong> · Built and tested November 13–14, 2026 · <strong>26 of 26 checks passing</strong> · Run by the owner on his own machine, November 14, 2026 · Status: <strong>proof of shape</strong> — the design was adopted into the project on November 14, 2026; the product build stands in the roadmap at Phase 6 (§6.7), with the offer made by requirementswiz at setup. The excerpts below are the prototype's actual code, not illustrations.</p>
+  <hr class="rule">
+
+  <h2>The idea</h2>
+  <p>An installation may open with a door: before anything else answers — before the gate, before any wizard — the person at the terminal types the installation's own password. Four decisions shape it:</p>
+  <p><strong>1. The lock is voluntary, and the offer is made once.</strong> At setup, the person chooses: set a lock, or decline. A decline is recorded and <strong>the question is never asked again</strong> — no nagging on later runs. Declining is not disappearing, though: the lock stays findable from inside (in the prototype, the <code>lock</code> command is where it lives), for whenever the person changes their mind.</p>
+  <p><strong>2. The offer states the honest trade before the choice.</strong> For you: nobody who sits down at the machine can open the installation. Against you: a lock you cannot open is a door you cannot pass — so the moment a password is set, the person also receives recovery keys (below); but if the password <em>and</em> the keys are both lost, there is no back door, for anyone. The house keeps no copy of anything. That price is stated on the offer screen, where the decision is actually made — not buried in a manual.</p>
+  <p><strong>3. Recovery keys — five, one-time, replaceable.</strong> Setting the password mints <strong>five one-time recovery keys</strong>, shown exactly once; only their hashes are kept, and nobody can display them again. At the door, the password prompt also accepts a key: it opens once, is spent, and is receipted, and the program directs the person to set a new password while they are in. Inside, a <code>keys</code> command reports how many remain, and <code>keys new</code> mints a fresh set of five — <strong>a fresh set kills the old set</strong>, so a lost key cannot outlive its replacement, and minting asks the current password first, as proof. The pattern is the house's own: the Arbiter's vault carries five one-time recovery keys, and its replenishment is now on the Arbiter's list as well.</p>
+  <p><strong>4. Every step explains itself.</strong> The door says how many tries you have and what a lockout means before you type anything; the menu says what each command does and what to type next; a near-miss — extra words after a command, <code>unlock</code> typed while already inside — receives pointed guidance instead of a bare refusal; and no instruction shows a bare placeholder word for a person to copy literally (the note command reads <em>type the word note, then YOUR OWN words</em>). Interrupting with Ctrl+C closes cleanly, and interrupting the offer itself records no choice at all. This wording was refined across the owner's own hands-on runs: the first version's presentation was, in his words, “a little confusing”; the guided version he ran next drew his verdict <em>“allot better now”</em> — a note he left in the prototype's own receipts — and that guided wording stands below unchanged, with the trade and the keys added around it.</p>
+  <p>The prototype implements exactly that, in one standard-library Python file (557 lines).</p>
+
+  <h2>How it works</h2>
+
+  <h3>The voluntary offer</h3>
+  <p>The first run makes the offer once. A yes goes to setup; a no writes the decline to the receipts and to the installation's state, and no later run ever raises the question again:</p>
+  <pre>        if ans in ("yes", "y"):
+            setup()
+            return True
+        if ans in ("no", "n"):
+            _save_declined()
+            receipt("lock_declined",
+                    "start lock declined at setup; not asked again")
+            print("No lock. The door stays open, and you will")
+            print("not be asked again. If you ever change your mind,")
+            print("type lock inside — that is where it lives.")
+            return True</pre>
+  <p>Interrupting the offer (Ctrl+C) returns without deciding: nothing is written, so the question is rightly asked again on the next run — an interruption is not a refusal.</p>
+
+  <h3>The password — a hash, never the password</h3>
+  <p>Setting the lock stores a salt and a PBKDF2 hash (50,000 iterations); the password itself is never written anywhere. Changing the password asks the current one first, and the receipts record the change — not the passwords.</p>
+
+  <h3>The door</h3>
+  <p>With a lock set, every run opens at the door. The receipts chain is verified before the first prompt — tampering is announced at the door, not discovered later. Three wrong tries and the door stays closed for that run; every refusal is receipted. The same prompt also accepts a recovery key:</p>
+  <pre>        spent = _check_recovery(pw)
+        if spent is not None:
+            num, set_no, left = spent
+            receipt("recovery_used",
+                    f"set {set_no}, key {num} of {KEYS_PER_SET} — spent")
+            print("Door open.")
+            print(f"That was recovery key {num} of set {set_no} — it is")
+            print("spent now and will not work again.")
+            print(f"You have {left} of {KEYS_PER_SET} recovery keys left.")</pre>
+
+  <h3>The recovery keys</h3>
+  <p>Minting a set replaces the whole set — that single fact is what makes a lost key safe to replace:</p>
+  <pre>def _issue_keys():
+    """Mint a fresh set of five one-time recovery keys. Any previous set
+    dies here — a lost key must not outlive its replacement. Only the
+    hashes are kept; the plain keys are returned for one display."""
+    plain = [_gen_key() for _ in range(KEYS_PER_SET)]
+    state = _load_state()
+    set_no = int(state.get("recovery_set", 0)) + 1
+    state["recovery_set"] = set_no
+    state["recovery"] = []
+    for key in plain:
+        salt = secrets.token_hex(8)
+        state["recovery"].append(
+            {"salt": salt, "hash": _key_hash(key, salt), "used": False})
+    _write_state(state)
+    receipt("recovery_keys_issued", f"set {set_no}, five one-time keys")
+    return plain</pre>
+  <p>A key carries about 70 bits of its own randomness, so each is kept as a salted fast hash; the human-chosen password, being low-entropy, keeps the slow PBKDF2 above. Spending a key flips its <code>used</code> flag in the same motion that opens the door — a spent key is checked against nothing and opens nothing:</p>
+  <pre>def _check_recovery(typed):
+    """If `typed` is a live recovery key: spend it and report
+    (key number, set number, keys left). Otherwise None."""
+    norm = typed.strip().upper()
+    if not norm.startswith("WK-"):
+        return None
+    state = _load_state()
+    for i, entry in enumerate(state.get("recovery", [])):
+        if entry["used"]:
+            continue
+        if hmac.compare_digest(_key_hash(norm, entry["salt"]), entry["hash"]):
+            entry["used"] = True
+            _write_state(state)
+            left = sum(1 for e in state["recovery"] if not e["used"])
+            return i + 1, int(state.get("recovery_set", 1)), left
+    return None</pre>
+  <p>The keys survive a password change — the password's salt and hash are replaced in the state; the key set is untouched — and that, too, is one of the checks below.</p>
+
+  <h3>The receipts</h3>
+  <p>Every act — the offer declined, the lock set, keys issued, a refusal, a key spent, a note, a password change, a re-lock — is appended to a hash-chained receipts log, the same chain discipline as every other build in this house. The receipts name acts and key <em>numbers</em> — never a password, never a key.</p>
+
+  <h2>The evidence</h2>
+  <p>The prototype's test file drives it as a person at a terminal would, in temporary folders. Result on November 14, 2026: <strong>26 checks, all passing</strong> — in a plain pipe and in a terminal window alike (the distinction matters: on a real terminal, a hidden password prompt reads the keyboard itself, and the harness was rebuilt to honor that rather than be fooled by its absence).</p>
+  <ul>
+    <li>setup announces itself · the door opens on the setup password · state file written · <strong>the password is nowhere on disk in plain text</strong></li>
+    <li>three wrong tries lock the door · refusals receipted · the lockout receipted</li>
+    <li>a note written and receipted · the log reads the chain as OK · re-lock from inside works</li>
+    <li>password change succeeds · the old password no longer opens · the new password opens</li>
+    <li><strong>a tampered chain is reported at the door</strong> — the test rewrites a record after the fact; the door announces the break before asking anything</li>
+    <li><strong>declining is honored and receipted</strong> · <strong>a declined installation is never asked again</strong> · the lock can be turned on later from inside · after the late opt-in, the door asks</li>
+    <li><strong>five recovery keys issued at setup</strong> · the set stored as five unspent hashes · <strong>keys never stored in plain text</strong></li>
+    <li><strong>a recovery key opens the door and is spent</strong> · <strong>a spent key does not open again</strong></li>
+    <li><code>keys</code> reports the count · <strong><code>keys new</code> mints five fresh ones</strong> · <strong>the old set dies when a fresh set is made</strong></li>
+    <li><strong>recovery keys survive a password change</strong></li>
+  </ul>
+
+  <h2>The Terminal Record</h2>
+  <p>The dated terminal proof — the actual output of the test run on the owner's own machine, unedited — followed by its parse, and by the owner's own hands-on runs.</p>
+  <pre>$ date
+Saturday, November 14, 2026 — 00:40 PST
+$ python3 test_lock_prototype.py
+PASS setup announces itself
+PASS door opens after setup password re-typed at the prompt
+PASS state file written
+PASS password never stored in plain text
+PASS three wrong tries lock the door
+PASS refusals are receipted
+PASS lockout is receipted
+PASS note is written and receipted
+PASS log reads the chain as OK
+PASS re-lock from inside works
+PASS password change succeeds
+PASS old password no longer opens
+PASS new password opens
+PASS tampered chain is reported at the door
+PASS declining is honored and receipted
+PASS a declined installation is never asked again
+PASS the lock can be turned on later from inside
+PASS after the late opt-in, the door asks
+PASS setup issues five recovery keys
+PASS the key set is stored as five unspent hashes
+PASS recovery keys are never stored in plain text
+PASS a recovery key opens the door and is spent
+PASS a spent key does not open again
+PASS keys reports the count and keys new mints five fresh ones
+PASS the old set dies when a fresh set is made
+PASS recovery keys survive a password change
+
+26/26 checks passed</pre>
+  <p><strong>The owner's own runs (November 14, 2026).</strong> The same evening, the owner ran the prototype himself, both roads. On the voluntary road he answered the offer <em>no</em> — and the next two runs opened straight in, unasked:</p>
+  <pre>Set a start lock? [yes/no]: no
+No lock. The door stays open, and you will
+not be asked again. If you ever change your mind,
+type lock inside — that is where it lives.</pre>
+  <p>On the locked road he set the password, received his five keys, read the count back (<code>keys</code> — <em>5 of 5</em>), minted a fresh set (<code>keys new</code> — <em>The old set is dead</em>), changed the password, re-locked from inside, and — testing the interruption that had once produced a raw traceback — pressed Ctrl+C at the door of a fresh run. The whole reply:</p>
+  <pre>Password:
+Closed.</pre>
+  <p>And the last road: on a later run he re-locked from inside and answered the door with a recovery key instead of the password. It opened, spent itself, and counted what remained — and his <code>keys</code> read-back agreed:</p>
+  <pre>Password:
+Door open.
+That was recovery key 1 of set 2 — it is
+spent now and will not work again.
+You have 4 of 5 recovery keys left.</pre>
+  <p><strong>The parse — how each proved thing is used.</strong> To decline the lock, answer the one-time offer <em>no</em>: the decline is receipted, the door stays open, and no run ever asks again (<em>declining is honored and receipted</em>, <em>a declined installation is never asked again</em>). To take the lock later anyway, type <code>lock</code> inside: it walks through setting a password and issues the keys in the same sitting (<em>the lock can be turned on later from inside</em>, <em>after the late opt-in, the door asks</em>). To open the door, type the password; three wrong tries close it for that run, each refusal receipted (<em>three wrong tries lock the door</em>). To get in with a forgotten password, type a recovery key at the same prompt: it opens, spends itself, and reports how many remain (<em>a recovery key opens the door and is spent</em>; <em>a spent key does not open again</em>). To run low safely, type <code>keys</code> for the count and <code>keys new</code> — password as proof — for five fresh ones, the old set dying in the same motion (<em>keys reports the count and keys new mints five fresh ones</em>; <em>the old set dies when a fresh set is made</em>). To change the password, <code>passwd</code> asks the current one, then the new one twice — and the keys keep working across the change (<em>password change succeeds</em>; <em>recovery keys survive a password change</em>). To check the record itself, <code>log</code> reads the chain back and verifies it — and a record rewritten after the fact is announced at the door before anything is asked (<em>log reads the chain as OK</em>; <em>tampered chain is reported at the door</em>).</p>
+
+  <h2>The house check</h2>
+  <p><strong>Receipts, hash-chained</strong> — every act above is receipted, and the chain is verified at the door. <strong>Standard library only</strong> — the prototype imports nothing outside Python's standard library. <strong>Asking before it acts</strong> — the room holds no destructive command; the two acts that change the lock itself, <code>passwd</code> and <code>keys new</code>, demand the current password as proof before they move, and the lock's whole offer is a question the person answers once. <strong>Demo discipline</strong> — this page is the documentation half; the test file is the live half; the owner's runs above are the third witness.</p>
+
+  <h2>What this does not prove</h2>
+  <p>Honesty about scope: the prototype proves the door's <em>shape</em> — the voluntary offer, the honest trade, the keys and their replenishment — in miniature, with plain files. It is a door lock on the installation, not encryption of the machine's disk: it governs who may <em>open the program</em>, and makes no claim about someone reading raw files off the drive. The real build wires the same shape into Wizard Central Pro at Phase 6 (§6.7): the offer made by requirementswiz during setup, the check placed before the gate and any wizard, the keys living with the installation's own state. The <em>terminal</em> lock — guarding the terminal itself, carried by bashwiz — is a sibling mechanism, designed alongside this one and not part of this prototype.</p>
+  <p><a href="prototypes.html">← All prototypes</a></p>
+
+  <hr class="rule light">
+  <p class="slogan">A command is what you type. The name is what the project is.</p>
+</div>
+<footer class="site">© 2026 MathSphere Nexus</footer>
+</body>
+</html>

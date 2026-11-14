@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prototype: The Broker — MathSphere Nexus</title>
+<link rel="icon" href="seal.webp">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MathSphere Nexus">
+<meta property="og:title" content="Prototype: The Broker">
+<meta property="og:description" content="A working prototype of Wizard Central's broker: gate-issued grants, context-bound handles, substitution refused in both directions, and revocation that reaches live access. Built and tested November 13, 2026 — 17 of 17 checks passing.">
+<meta property="og:url" content="https://rewardsbycode-eng.github.io/mathspherenexus/prototype-broker.html">
+<meta property="og:image" content="https://rewardsbycode-eng.github.io/mathspherenexus/seal.webp">
+<meta name="twitter:card" content="summary">
+<meta name="description" content="A working prototype of Wizard Central's broker: gate-issued grants, context-bound handles, substitution refused in both directions, and revocation that reaches live access. Built and tested November 13, 2026 — 17 of 17 checks passing.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="site">
+    <img src="seal.webp" alt="MathSphere Nexus official corporate seal">
+    <span class="name">MathSphere Nexus</span>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="projects.html">Projects</a>
+      <a href="prototypes.html">Prototypes</a>
+      <a href="diary.html">Diary</a>
+      <a href="blog.html">Blog</a>
+    </nav>
+  </header>
+
+  <h1>The Broker</h1>
+  <p class="meta">A prototype of the Wizard Central Pro AI Modes Toolkit · <strong>Went into implementation: November 13, 2026</strong> · Tested the same day · Status: <strong>proof of shape</strong> — in the roadmap, the broker stands as its own phase, Phase 7. The excerpts below are the prototype's actual code.</p>
+  <hr class="rule">
+
+  <h2>The idea</h2>
+  <p>The in-system guide reads on behalf of two audiences — the <strong>user</strong> and a <strong>provider</strong> — and the boundary between them must be structural, not promised. The broker is the mechanism that makes it structural. <strong>Grants</strong> are gate-side acts: a grant names one context and a scope of sources, and a provider grant exists only because the person issued it. <strong>Handles</strong> are keys cut for one grant: a read succeeds only through a live handle, in scope, <em>in context</em> — the source's audience must equal the handle's context. <strong>Revocation reaches live access</strong>: revoke a grant and every handle under it dies at once. And the whole mechanism is <strong>default-closed</strong>: no grant, no key; a forged handle is no handle; every refusal is receipted, with its reason.</p>
+
+  <h2>How it works</h2>
+
+  <h3>The grant</h3>
+  <pre>    def issue_grant(self, grant_id, context, scopes, by):
+        """A grant is a gate-side act. A provider grant is issued by the person."""
+        if context not in ("user", "provider"):
+            raise ValueError(f"unknown context: {context}")
+        if grant_id in self.grants:
+            raise ValueError(f"grant already exists: {grant_id}")
+        self.grants[grant_id] = {
+            "context": context,
+            "scopes": list(scopes),
+            "revoked": False,
+        }
+        self.chain.append(
+            "grant_issued", grant=grant_id, context=context,
+            scopes=sorted(scopes), by=by,
+        )
+        self._save()
+        return self.grants[grant_id]</pre>
+
+  <h3>The read — where enforcement lives</h3>
+  <p>Note where the context check sits: at the <strong>read</strong>, not at issuance. Even a grant misissued with a cross-audience source inside its scope cannot read across, because the source's audience must equal the handle's context at the moment of the read:</p>
+  <pre>    def read(self, token, source):
+        """A read succeeds only through a live handle, in scope, in context."""
+        h = self.handles.get(token)
+        if h is None:
+            self.chain.append("read_refused", source=source,
+                              reason="unknown handle")
+            raise PermissionError("unknown handle")
+        if not h["alive"]:
+            self.chain.append("read_refused", source=source, context=h["context"],
+                              reason="handle dead — its grant was revoked")
+            raise PermissionError("handle dead — its grant was revoked")
+        src = self.sources.get(source)
+        if src is None:
+            self.chain.append("read_refused", source=source, context=h["context"],
+                              reason="no such source")
+            raise PermissionError("no such source")
+        if source not in h["scopes"]:
+            self.chain.append("read_refused", source=source, context=h["context"],
+                              reason="source out of scope")
+            raise PermissionError("source out of this handle's scope")
+        if src["audience"] != h["context"]:
+            self.chain.append("read_refused", source=source, context=h["context"],
+                              reason="cross-context substitution")
+            raise PermissionError(
+                "cross-context: a handle opens only its own context's sources")
+        self.chain.append("read_allowed", source=source, context=h["context"])
+        return src["content"]</pre>
+
+  <h3>Revocation</h3>
+  <pre>    def revoke(self, grant_id, by):
+        """Revocation reaches live access: every handle under the grant dies."""
+        g = self.grants[grant_id]
+        g["revoked"] = True
+        killed = 0
+        for h in self.handles.values():
+            if h["grant"] == grant_id and h["alive"]:
+                h["alive"] = False
+                killed += 1
+        self.chain.append("grant_revoked", grant=grant_id, by=by,
+                          handles_killed=killed)
+        self._save()
+        return killed</pre>
+  <p>The revocation receipt carries the kill count — in the test run, 2: both live handles under the grant died in the one act, and both refused afterward.</p>
+
+  <h2>The evidence</h2>
+  <p>Result on November 13, 2026: <strong>17 checks, all passing</strong> — including substitution refused in <em>both</em> directions (user→provider is an escalation; provider→user crosses into the person's own surfaces), the misissued-scope cases, and a deliberate tamper of the receipt chain, caught by verification.</p>
+
+  <h2>The Terminal Record</h2>
+  <p>The dated terminal proof of the run above — the actual output, unedited — followed by its parse: how to use everything that was tested and proved.</p>
+  <pre>$ date
+Friday, November 13, 2026 — 17:45 PST
+$ python3 test_broker_prototype.py
+ok - user handle reads a user source
+ok - provider handle reads a provider source
+ok - substitution refused: user handle at a provider source
+ok - substitution refused: provider handle at a user source
+ok - misissued scope still refused: user context, provider source in scope
+ok - misissued scope still refused: provider context, user source in scope
+ok - ungranted mint refused
+ok - out-of-scope read refused
+ok - forged handle refused
+ok - revocation kills every live handle
+ok - read after revoke refused
+ok - second killed handle also refused
+ok - mint after revoke refused
+ok - refusals are receipted
+ok - revocation receipt carries handles killed
+ok - chain verifies
+ok - tamper detected
+
+all 17 checks passed</pre>
+  <p><strong>The parse — how each proved thing is used.</strong> To let a context read, the gate issues a grant (context, scopes, by the person's act for a provider) and the broker mints a handle under it (<em>user/provider handle reads…</em>). To cross contexts there is no use at all: a handle presented at the other audience's source is refused, whichever direction, and even if the grant was misissued with the foreign source in its scope (<em>substitution refused…</em>, <em>misissued scope still refused…</em>) — enforcement sits at the read, not at issuance. To read without a grant, or outside a grant's scope, or with an invented token, is refused by default (<em>ungranted mint refused</em>, <em>out-of-scope read refused</em>, <em>forged handle refused</em>). To end a grant's life, revoke it: every live handle dies in the same motion, the receipt carries how many, and neither old handles nor new mints work afterward (<em>revocation kills every live handle</em>, <em>read after revoke refused</em>, <em>mint after revoke refused</em>). And the record of all of it — grants, mints, allows, refusals with reasons — sits in the chain, which verifies and catches later edits (<em>refusals are receipted</em>, <em>chain verifies</em>, <em>tamper detected</em>).</p>
+
+  <h2>The house check</h2>
+  <p><strong>Receipts, hash-chained</strong> — grants, mints, reads, refusals, and revocations are all receipted; the chain verifies and catches tampering. <strong>Double-ask</strong> — revocation is the broker's destructive act; in this library prototype it is a direct gate-side call, and the real build's terminal surface carries the double-ask per house law. What the prototype proves is the revocation's <em>reach</em>: live handles die. <strong>Standard library only</strong> — yes. <strong>Demo discipline</strong> — this page is the documentation half; the test file is the live half.</p>
+
+  <h2>What this does not prove</h2>
+  <p>The prototype proves the broker's <em>mechanics</em> in miniature: binding, substitution refusal in both directions, default-closed minting, revocation reaching live handles. It does not contain the guide, the registry's policy declarations, or separate processes — the design's test-gate (a shared guide process only if the substitution test passes in the suite; separate processes required on failure) belongs to the product build's own test wing. <em>Stated, not enforced</em> is the label this prototype exists to retire — for the broker's mechanics, and only for them.</p>
+  <p><a href="prototypes.html">← All prototypes</a></p>
+
+  <hr class="rule light">
+  <p class="slogan">A command is what you type. The name is what the project is.</p>
+</div>
+<footer class="site">© 2026 MathSphere Nexus</footer>
+</body>
+</html>

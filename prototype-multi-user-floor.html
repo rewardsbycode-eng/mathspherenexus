@@ -8,11 +8,11 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="MathSphere Nexus">
 <meta property="og:title" content="Prototype: Many People, One Machine — The Floor">
-<meta property="og:description" content="A working prototype of Wizard Central's multi-user floor: an author field on every creation, a hash-chained user log, a chat lifecycle, and deletion rights with edges. Built and tested November 13, 2026 — 19 of 19 checks passing.">
+<meta property="og:description" content="A working prototype of Wizard Central's multi-user floor: an author field on every creation, a hash-chained user log, a chat lifecycle, and deletion rights with edges. Built and tested November 13, 2026 — 19 of 19 checks passing in its first run; hardened in review the same day to 21 of 21.">
 <meta property="og:url" content="https://rewardsbycode-eng.github.io/mathspherenexus/prototype-multi-user-floor.html">
 <meta property="og:image" content="https://rewardsbycode-eng.github.io/mathspherenexus/seal.webp">
 <meta name="twitter:card" content="summary">
-<meta name="description" content="A working prototype of Wizard Central's multi-user floor: an author field on every creation, a hash-chained user log, a chat lifecycle, and deletion rights with edges. Built and tested November 13, 2026 — 19 of 19 checks passing.">
+<meta name="description" content="A working prototype of Wizard Central's multi-user floor: an author field on every creation, a hash-chained user log, a chat lifecycle, and deletion rights with edges. Built and tested November 13, 2026 — 19 of 19 checks passing in its first run; hardened in review the same day to 21 of 21.">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -122,31 +122,39 @@
   <pre>    def delete_project(self, name, by, owner=False, export_dir=None,
                        double_asked=False):
         """Existence rule: only the owner's act deletes a project, export first.
-        Destructive: the double-ask is a call contract — no double-ask, no deletion."""
+        Destructive: both the double-ask and the export destination are call
+        contracts — no double-ask, no deletion; no export, no deletion.
+        (Export boundary sealed 2026-11-13: review catch by GM — with
+        export_dir optional, an owner caller could delete with no export
+        at all and the receipt recorded it quietly.)"""
         if not double_asked:
             raise RuntimeError("double-ask required before deletion")
         if not owner:
             raise PermissionError("a project is deleted only by the owner's act")
+        if not export_dir:
+            raise ValueError(
+                "export directory required before project deletion"
+                " — no export, no delete")
         proj = self.projects[name]
-        export_file = None
-        if export_dir:
-            export_file = Path(export_dir) / f"{name}-export.json"
-            export_file.write_text(json.dumps(proj, indent=1))
+        export_file = Path(export_dir) / f"{name}-export.json"
+        export_file.write_text(json.dumps(proj, indent=1))
         del self.projects[name]
         self.chain.append(
             "project_deleted", project=name, author=proj["author"], by=by,
-            export=str(export_file) if export_file else None,
+            export=str(export_file),
         )
         self._save()
         return export_file</pre>
   <p>The double-ask appears here as a <em>call contract</em>: a library cannot ask a person questions at a terminal, so the prototype enforces the shape — a deletion that does not arrive double-asked is refused outright. In the real build, the terminal asks the person twice; the contract underneath is this one.</p>
+  <p><strong>Hardened in review, the same day.</strong> As first built, the export destination was an optional argument — and an owner caller who simply omitted it deleted the project with no export at all, the receipt quietly recording the absence. The invariant was stated in prose and tested on the path taken, but not enforced at the boundary. Review by GM caught it (November 13, 2026); the boundary was sealed the same day — the export destination is now a call contract like the double-ask: <em>no export, no deletion</em> — and two checks were added for exactly that refusal. The second run in the Terminal Record below is the proof.</p>
 
   <h2>The evidence</h2>
-  <p>The prototype's test file runs every feature live. Result on November 13, 2026: <strong>19 checks, all passing.</strong></p>
+  <p>The prototype's test file runs every feature live. Result on November 13, 2026: <strong>21 checks, all passing</strong> (19 in the first run; two added the same day when the export boundary was sealed — see the Terminal Record).</p>
   <ul>
     <li>author field on creation · search by author · authors summary</li>
     <li>cross-user chat delete <strong>refused</strong> · chat delete without double-ask <strong>refused</strong> · own chat deleted</li>
     <li>non-owner project delete <strong>refused</strong> · project delete without double-ask <strong>refused</strong> · project survives refused delete</li>
+    <li>project delete without export_dir <strong>refused</strong> · project survives refused delete (no export)</li>
     <li>lifecycle caps hold · lifecycle steps receipted · <strong>projects exempt from lifecycle</strong></li>
     <li>export produced before delete · export carries the author's work · project deleted by owner act</li>
     <li>log by author · log by project</li>
@@ -179,6 +187,34 @@ ok - chain verifies
 ok - tamper detected
 
 all 19 checks passed</pre>
+  <p><strong>The second run — after the export boundary was sealed (November 13, 2026).</strong> The first record above stands as it ran; nothing in it was rewritten. The same evening, after review, the prototype was hardened and re-run in full:</p>
+  <pre>$ date
+Friday, November 13, 2026 — 22:59 PST
+$ python3 test_creations_prototype.py
+ok - author field on creation
+ok - search by author
+ok - authors summary
+ok - cross-user chat delete refused
+ok - chat delete without double-ask refused
+ok - own chat deleted
+ok - non-owner project delete refused
+ok - project delete without double-ask refused
+ok - project survives refused delete
+ok - project delete without export_dir refused
+ok - project survives refused delete (no export)
+ok - lifecycle caps hold
+ok - lifecycle steps receipted
+ok - projects exempt from lifecycle
+ok - export produced before delete
+ok - export carries the author's work
+ok - project deleted by owner act
+ok - log by author
+ok - log by project
+ok - chain verifies
+ok - tamper detected
+
+all 21 checks passed</pre>
+  <p>The two new lines prove the sealed boundary: a project deletion attempted with the owner flag and the double-ask but <em>no export destination</em> is refused (<em>project delete without export_dir refused</em>), and the project is still there afterward (<em>project survives refused delete (no export)</em>).</p>
   <p><strong>The parse — how each proved thing is used.</strong> To create with an author line, a project is created with three values — name, classification, author — and the receipt is written in the same motion (proved by <em>author field on creation</em>). To find a person's work, search by author, or read the log filtered by author or by project (<em>search by author</em>, <em>log by author</em>, <em>log by project</em>); to see everyone on the machine, take the authors summary. To delete a chat, its own author asks twice and calls the deletion — anyone else is refused, and a call without the double-ask is refused (<em>cross-user chat delete refused</em>, <em>chat delete without double-ask refused</em>, <em>own chat deleted</em>). To remove a project, only the owner calls it, double-asked, and an export file lands before the project does (<em>non-owner project delete refused</em>, <em>export produced before delete</em>, <em>project deleted by owner act</em>). To run the lifecycle, nothing is called at all: creating chats past the caps rolls the oldest through archive and deletion on its own, receipted at each step, and never touches a project (<em>lifecycle caps hold</em>, <em>lifecycle steps receipted</em>, <em>projects exempt from lifecycle</em>). To check the record itself, verification walks the chain (<em>chain verifies</em>) — and catches any later edit (<em>tamper detected</em>).</p>
 
   <h2>The house check</h2>

@@ -41,10 +41,31 @@
   <h2>Wizard Central Pro AI Modes Toolkit</h2>
 
   <h3>Many People, One Machine — The Floor</h3>
-  <p class="meta">Prototype · <strong>Went into implementation: November 13, 2026</strong> · Tested the same day · <strong>19 of 19 checks passing</strong></p>
+  <p class="meta">Prototype · <strong>Went into implementation: November 13, 2026</strong> · Tested the same day · <strong>21 of 21 checks passing</strong> (19 in the first run; the export boundary was sealed in review the same day)</p>
   <p>The floor of the multi-user design: how one installation serves several people with no accounts and nothing to download. An <strong>author field</strong> on every project, a <strong>hash-chained user log</strong> read by author, a <strong>chat lifecycle</strong> that archives and eventually deletes chats — and only chats — and <strong>deletion rights with edges</strong>: a person deletes their own chats; a project is removed only by the owner's act, its creator's work exported first.</p>
   <p class="buttons">
     <a class="btn red" href="prototype-multi-user-floor.html">Read the prototype document</a>
+  </p>
+
+  <h3>The Hub — Approved Users and Their Projects</h3>
+  <p class="meta">Prototype · <strong>Went into implementation: November 13, 2026</strong> · Tested the same day · <strong>18 of 18 checks passing</strong></p>
+  <p>Layer 2 over the floor: the owner approves people onto the installation — they are his responsibility — and they work in <strong>projects</strong>. The author field fills itself from the <strong>sign-in</strong>; every project carries <strong>its own password</strong>, and it opens for no one without it — <strong>the owner included</strong>: existence is his, contents are the creator's. Removing a person kills their session in the same motion, and their projects survive them.</p>
+  <p class="buttons">
+    <a class="btn red" href="prototype-hub.html">Read the prototype document</a>
+  </p>
+
+  <h3>The Broker</h3>
+  <p class="meta">Prototype · <strong>Went into implementation: November 13, 2026</strong> · Tested the same day · <strong>17 of 17 checks passing</strong></p>
+  <p>The gate-side mechanism the whole guide design stands on — in the roadmap it is <strong>Phase 7</strong>, its own phase. <strong>Grants</strong> name a context and a scope; <strong>handles</strong> are keys cut for one grant, and a read succeeds only through a live handle, in scope, in context. Substitution is refused in both directions — even under a misissued grant — and <strong>revocation kills every live handle at once</strong>. Default-closed throughout, every refusal receipted.</p>
+  <p class="buttons">
+    <a class="btn red" href="prototype-broker.html">Read the prototype document</a>
+  </p>
+
+  <h3>The Start Lock — A Voluntary Door</h3>
+  <p class="meta">Prototype · <strong>Went into implementation: November 13, 2026</strong> · Tested November 13–14 · <strong>26 of 26 checks passing</strong> · Run by the owner on his own machine · Design adopted November 14, 2026</p>
+  <p>An installation may open with a <strong>password door</strong> — and the door is <strong>voluntary</strong>: offered <strong>once</strong>, at setup, with <strong>the honest trade</strong> stated before the choice (real security on one side; lose the password <em>and</em> the keys and there is no back door, on the other). Decline, and you are <strong>never asked again</strong> — though the lock stays findable inside. Setting it mints <strong>five one-time recovery keys</strong>, the Arbiter's pattern: shown once, hashes only kept; a key opens the door once and is spent, and inside, <code>keys new</code> mints a fresh set that <strong>kills the old one</strong>. Every step explains itself, and every act is receipted.</p>
+  <p class="buttons">
+    <a class="btn red" href="prototype-start-lock.html">Read the prototype document</a>
   </p>
 
   <h2>Wizard Central Toolkit</h2>

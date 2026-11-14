@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prototype: The Hub — Approved Users and Their Projects — MathSphere Nexus</title>
+<link rel="icon" href="seal.webp">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MathSphere Nexus">
+<meta property="og:title" content="Prototype: The Hub — Approved Users and Their Projects">
+<meta property="og:description" content="A working prototype of Wizard Central's hub layer: owner-approved users on one installation, projects authored by their sign-in and sealed by their own passwords — the owner included. Built and tested November 13, 2026 — 18 of 18 checks passing.">
+<meta property="og:url" content="https://rewardsbycode-eng.github.io/mathspherenexus/prototype-hub.html">
+<meta property="og:image" content="https://rewardsbycode-eng.github.io/mathspherenexus/seal.webp">
+<meta name="twitter:card" content="summary">
+<meta name="description" content="A working prototype of Wizard Central's hub layer: owner-approved users on one installation, projects authored by their sign-in and sealed by their own passwords — the owner included. Built and tested November 13, 2026 — 18 of 18 checks passing.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="site">
+    <img src="seal.webp" alt="MathSphere Nexus official corporate seal">
+    <span class="name">MathSphere Nexus</span>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="projects.html">Projects</a>
+      <a href="prototypes.html">Prototypes</a>
+      <a href="diary.html">Diary</a>
+      <a href="blog.html">Blog</a>
+    </nav>
+  </header>
+
+  <h1>The Hub — Approved Users and Their Projects</h1>
+  <p class="meta">A prototype of the Wizard Central Pro AI Modes Toolkit · <strong>Went into implementation: November 13, 2026</strong> · Tested the same day · Status: <strong>proof of shape</strong> — Layer 2 of the multi-user design, whose real build stands in the roadmap at Phase 6 (§6.7). The excerpts below are the prototype's actual code.</p>
+  <hr class="rule">
+
+  <h2>The idea</h2>
+  <p>On a shared machine, the owner approves people onto the installation — and they become <strong>his responsibility</strong>, because it is his machine and he approved them. They work on the creative side, in <strong>projects</strong>. The hub layer adds four things to the floor. <strong>A local users registry</strong>: the owner approves a person with a username and a password, stored salted and hashed; sign-in returns a session, and wrong passwords and unapproved names are refused. <strong>The author field, bound to the sign-in</strong>: when a signed-in user creates a project, its author <em>is</em> their username — the floor's typed claim, filled by the sign-in itself. <strong>A password for every project</strong>, set by its creator: a project opens with its own password — for everyone, <strong>the owner included</strong>; there is no master key. And <strong>existence vs. contents</strong>: the owner may remove a user (their live sessions die in the same motion) and delete a project (double-asked, export first) — but a project's contents are never his to open, and a removed user's projects <strong>survive</strong>: projects never delete on their own.</p>
+
+  <h2>How it works</h2>
+
+  <h3>Creation — the field binds itself</h3>
+  <pre>    def create_project(self, token, name, classification, project_password,
+                       contents=""):
+        """The author field, bound to the sign-in: author IS the username."""
+        author = self._who(token)
+        if name in self.projects:
+            raise ValueError(f"project already exists: {name}")
+        salt, digest = _pw_hash(project_password)
+        self.projects[name] = {
+            "name": name,
+            "classification": classification,
+            "author": author,
+            "salt": salt,
+            "hash": digest,
+            "contents": contents,
+        }
+        self.chain.append(
+            "project_created", project=name,
+            classification=classification, author=author,
+        )
+        self._save()
+        return self.projects[name]</pre>
+
+  <h3>Opening — no master key</h3>
+  <pre>    def open_project(self, token, name, project_password):
+        """Contents open with the project's password — for everyone,
+        the owner included. There is no master key."""
+        self._who(token)
+        proj = self.projects[name]
+        if not _pw_matches(project_password, proj["salt"], proj["hash"]):
+            raise PermissionError("a project opens with its own password")
+        self.chain.append("project_opened", project=name, author=proj["author"])
+        return {
+            "name": proj["name"],
+            "classification": proj["classification"],
+            "author": proj["author"],
+            "contents": proj["contents"],
+        }</pre>
+  <p>The load-bearing test of the whole prototype is one line of its run below: <em>owner refused opening without the project password</em>. The owner's power is over existence, never over contents.</p>
+
+  <h3>Removal — the person goes, the work stays</h3>
+  <pre>    def remove_user(self, owner_token, username):
+        """The owner's unilateral act: the user goes, and every live
+        session of theirs dies in the same motion."""
+        by = self._owner_who(owner_token)
+        if username == self.owner:
+            raise PermissionError("the owner cannot remove themselves")
+        del self.users[username]
+        self.sessions = {t: u for t, u in self.sessions.items() if u != username}
+        self.chain.append("user_removed", user=username, by=by)
+        self._save()</pre>
+  <p>Deleting a project is the floor's rule unchanged: the owner's act only, the double-ask as a call contract, and the export — name, classification, author, contents — written to a file <em>before</em> the project is removed, and named on the receipt.</p>
+
+  <h2>The evidence</h2>
+  <p>Result on November 13, 2026: <strong>18 checks, all passing</strong> — including the owner refused at a project's door, a removed user's session dying mid-flight while her project survives her, and a deliberate tamper of the receipt chain, caught by verification.</p>
+
+  <h2>The Terminal Record</h2>
+  <p>The dated terminal proof of the run above — the actual output, unedited — followed by its parse: how to use everything that was tested and proved.</p>
+  <pre>$ date
+Friday, November 13, 2026 — 17:45 PST
+$ python3 test_hub_prototype.py
+ok - owner approves a user; the user signs in
+ok - wrong-password sign-in refused
+ok - unapproved sign-in refused
+ok - project author is the signed-in username
+ok - project opens with its password
+ok - wrong project password refused
+ok - owner refused opening without the project password
+ok - non-owner project delete refused
+ok - project delete without double-ask refused
+ok - project survives refused deletes
+ok - removed user's session is dead
+ok - removed user cannot sign in again
+ok - project survives its author's removal
+ok - export produced before delete
+ok - export carries the author's work
+ok - project deleted by owner act
+ok - chain verifies
+ok - tamper detected
+
+all 18 checks passed</pre>
+  <p><strong>The parse — how each proved thing is used.</strong> To bring a person onto the machine, the owner approves them (username, password); they sign in and hold a session (<em>owner approves a user; the user signs in</em>) — a wrong password or a name never approved gets nothing (<em>wrong-password sign-in refused</em>, <em>unapproved sign-in refused</em>). To start work, a signed-in user creates a project with a name, a classification, and a project password; the author line fills itself from the sign-in (<em>project author is the signed-in username</em>). To open a project, anyone — creator, another user, the owner — presents the project's password; without it the door does not move (<em>project opens with its password</em>, <em>wrong project password refused</em>, <em>owner refused opening without the project password</em>). To end a person's time on the machine, the owner removes them: the registry entry goes, their live session dies in the same motion, they cannot sign in again — and their projects remain exactly where they were (<em>removed user's session is dead</em>, <em>removed user cannot sign in again</em>, <em>project survives its author's removal</em>). To remove a project, only the owner calls it, double-asked, and the export lands first (<em>non-owner project delete refused</em>, <em>project delete without double-ask refused</em>, <em>export produced before delete</em>, <em>project deleted by owner act</em>). The chain records all of it and catches later edits (<em>chain verifies</em>, <em>tamper detected</em>).</p>
+
+  <h2>The house check</h2>
+  <p><strong>Receipts, hash-chained</strong> — approvals, sign-ins, creations, openings, removals, deletions; the chain verifies and catches tampering. <strong>Double-ask on destructive acts</strong> — enforced as the call contract: a project deletion that does not arrive double-asked is refused outright. <strong>Standard library only</strong> — password hashing is the standard library's salted PBKDF. <strong>Demo discipline</strong> — this page is the documentation half; the test file is the live half.</p>
+
+  <h2>What this does not prove</h2>
+  <p>Two honesty labels, stated plainly. <strong>Project contents are stored unencrypted</strong> in the prototype: what is proved is the password <em>gate</em> on opening — nobody, owner included, opens a project without its password — not encryption of the contents at rest; that belongs to the product build. And the password hash runs at a deliberately small iteration count so the tests run fast; a real build sets it properly. The prototype also contains no creative surfaces, no guide, and no gate — it proves the hub's registry, sign-in, authorship binding, sealed contents, and existence powers, in miniature.</p>
+  <p><a href="prototypes.html">← All prototypes</a></p>
+
+  <hr class="rule light">
+  <p class="slogan">A command is what you type. The name is what the project is.</p>
+</div>
+<footer class="site">© 2026 MathSphere Nexus</footer>
+</body>
+</html>
