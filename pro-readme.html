@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wizard Central Pro AI Modes Toolkit — README — MathSphere Nexus</title>
+<link rel="icon" href="seal.webp">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MathSphere Nexus">
+<meta property="og:title" content="Wizard Central Pro AI Modes Toolkit — README">
+<meta property="og:description" content="The README of the Wizard Central Pro AI Modes Toolkit — the project's own front door, as published in its repository.">
+<meta property="og:url" content="https://rewardsbycode-eng.github.io/mathspherenexus/pro-readme.html">
+<meta property="og:image" content="https://rewardsbycode-eng.github.io/mathspherenexus/seal.webp">
+<meta name="twitter:card" content="summary">
+<meta name="description" content="The README of the Wizard Central Pro AI Modes Toolkit — the project's own front door, as published in its repository.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="site">
+    <img src="seal.webp" alt="MathSphere Nexus official corporate seal">
+    <span class="name">MathSphere Nexus</span>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="projects.html">Projects</a>
+      <a href="prototypes.html">Prototypes</a>
+      <a href="diary.html">Diary</a>
+      <a href="blog.html">Blog</a>
+    </nav>
+  </header>
+
+  <h1>Wizard Central Pro AI Modes Toolkit — README</h1>
+  <p class="meta">The README as published in the project's repository</p>
+
+  <h2>🧙 wizard-central-pro-AI-modes-toolkit</h2>
+  <p>A toolkit of command-line wizards that a person, or a language model on the same machine, can run, with a gate in
+  front of everything a model may touch. What is in it, counted from the code:</p>
+  <!-- gen:summary (scripts/gen_readme.py; do not edit by hand) -->
+  <ul>
+  <li><strong>39 command-line wizards that run</strong> (<code>wizards/</code>), with 486 commands between them. Each is a separate program; most need nothing beyond Python (see <strong>What you need</strong>).</li>
+  <li><strong>An MCP bridge</strong> (<code>mcp/server.py</code>) that lets a model on this machine use 107 of those commands as tools, but only what a person switched on, inside folders a person granted, checked by 9 guard modes, run behind a sandbox wall, and written to a receipts log.</li>
+  <li><strong>75 AI modes</strong>: named prompt texts that <code>compose()</code> combines into one system prompt with a SHA-256 fingerprint. The text is reproducible; what a mode does to a model's answers is not measured.</li>
+  <li><strong>The wizard roster:</strong> 110 tool-style wizards in 25 categories, kept as registry data (name, category, description, a function schema). <strong>39 of them have code here; the other 71 are descriptions only and cannot be run.</strong></li>
+  </ul>
+  <!-- /gen:summary -->
+
+  <p>Everything here is checked by tests, and nothing is meant to be claimed that a test does not prove. Sections marked
+  <em>generated</em> are written by <code>python3 scripts/gen_readme.py</code> from the code; <code>tests/test_readme_gen.py</code> fails when they
+  are out of date, or when the code needs something they do not mention.</p>
+  <p><strong>Before you share this repository:</strong> the ported wizards' code is private, copied from the owner's <code>wizard_central</code>
+  (<code>wizards/PORTING.md</code>).</p>
+  <hr />
+  <h2>✅ Status</h2>
+  <p><em>Generated.</em></p>
+  <!-- gen:status (scripts/gen_readme.py; do not edit by hand) -->
+  <table>
+  <thead>
+  <tr>
+  <th style="text-align: left;">Piece</th>
+  <th style="text-align: left;">State</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr>
+  <td style="text-align: left;">Runnable wizards: <code>engine.ported.run</code> has 39 entries (37 ported from <code>wizard_central</code> plus 2 new: <code>@grantwiz</code>, <code>@mcpwiz</code>), 486 commands</td>
+  <td style="text-align: left;">Built, tested (<code>tests/test_ported.py</code>, one test file per wizard)</td>
+  </tr>
+  <tr>
+  <td style="text-align: left;">Command-line wizards ported from <code>wizard_central</code></td>
+  <td style="text-align: left;"><strong>38 originals ported as 37 wizards; 0 remain</strong>. 3 set aside by the owner, may return later (<code>@rustwiz</code>, <code>@tmuxwiz</code>, <code>@fleetwiz</code>). Rosters: <code>wizards/PORTING.md</code>, <code>docs/BASE_ROSTER.md</code></td>
+  </tr>
+  <tr>
+  <td style="text-align: left;">MCP bridge (<code>mcp/server.py</code>) and its settings wizard <code>@mcpwiz</code></td>
+  <td style="text-align: left;">Built, tested (<code>tests/test_mcp_server.py</code>, <code>tests/test_mcpwiz.py</code>). 12 wizards ship an <code>mcp.json</code> listing 139 commands: 107 can be offered as tools once a person switches them on, 32 are <code>never</code>. Client verified end to end: ollmcp</td>
+  </tr>
+  <tr>
+  <td style="text-align: left;">Guard modes in the bridge</td>
+  <td style="text-align: left;">9 built of 23 planned, tested (<code>tests/test_guardrails.py</code>, <code>tests/test_mcp_server.py</code>)</td>
+  </tr>
+  <tr>
+  <td style="text-align: left;">Sandbox wall around every bridge call</td>
+  <td style="text-align: left;">Built, tested on Linux (<code>tests/test_sandbox.py</code>): Landlock limits files, seccomp denies <code>socket</code>, <code>connect</code>, <code>io_uring_setup</code> and <code>ptrace</code>. Not available on macOS or Windows</td>
+  </tr>
+  <tr>
+  <td style="text-align: left;">Folder grants and the hash-chained receipts log</td>
+  <td style="text-align: left;">Built, tested (<code>tests/test_mcpwiz.py</code>, <code>tests/test_grantwiz.py</code>)</td>
+  </tr>
+  <tr>
+  <td style="text-align: left;">The godfatherwiz REPL (a local model that can call wizards)</td>
+  <td style="text-align: left;">Works with Ollama. Its model may call only 7 reviewed look-only wizards (76 commands); this is containment, not the bridge's gate (<code>tests/test_godfatherwiz_repl.py</code>)</td>
+  </tr>
+  <tr>
+  <td style="text-align: left;">Wizard roster: 110 wizards in 25 categories (185 specs with the 75 AI modes)</td>
+  <td style="text-align: left;">Registry data, tested. <strong>39 of the 110 have code here; the other 71 are descriptions only and cannot be run</strong></td>
+  </tr>
+  <tr>
+  <td style="text-align: left;">Tool export (<code>export_llm_tools</code>): 110 function schemas, with an optional category filter</td>
+  <td style="text-align: left;">Built, tested. The schemas include the 71 roster wizards with no code: a model given them can name tools that do not exist here</td>
+  </tr>
+  <tr>
+  <td style="text-align: left;">75 AI modes with full prompts (<code>docs/MODES.md</code>) and <code>compose()</code></td>
+  <td style="text-align: left;">Built, tested: the prompt text and its SHA-256 fingerprint are reproducible. <strong>What a mode does to a model's answers is not measured</strong></td>
+  </tr>
+  <tr>
+  <td style="text-align: left;">Your own modes and guard rules (<code>custom_modes.py</code>, <code>guardrails.py</code>)</td>
+  <td style="text-align: left;">Built, tested; each is approved by hash (<code>docs/CUSTOM_MODES.md</code>)</td>
+  </tr>
+  <tr>
+  <td style="text-align: left;">The test loop and the commit check (<code>scripts/loop.py</code>, <code>scripts/precommit_check.py</code>)</td>
+  <td style="text-align: left;">Built, tested (<code>tests/test_automation.py</code>). The loop runs 66 test files</td>
+  </tr>
+  <tr>
+  <td style="text-align: left;">License check and subscriber certification (<code>license.py</code>, <code>conductor_certifier.py</code>)</td>
+  <td style="text-align: left;">Code present, tested (<code>tests/test_license_and_certifier.py</code>). The license check is a <strong>placeholder, not protection</strong> (<code>docs/ARCHITECTURE.md</code>)</td>
+  </tr>
+  <tr>
+  <td style="text-align: left;"><code>pip</code> packaging</td>
+  <td style="text-align: left;"><strong>Not built</strong>: no PyPI package and no single console command. Run from the repository</td>
+  </tr>
+  </tbody>
+  </table>
+  <!-- /gen:status -->
+
+  <hr />
+  <h2>📦 What you need</h2>
+  <p><em>Generated.</em> Nothing here is needed all at once: install only what the part you want to use needs.</p>
+  <!-- gen:requirements (scripts/gen_readme.py; do not edit by hand) -->
+  <p><strong>Python 3.12 or newer</strong> (tested on 3.13). The registry, <code>compose()</code> and most wizards use only the standard library. <strong>Linux</strong> for the sandbox wall; the rest is tested on Linux only (Debian, and Chromebook Linux). macOS and Windows are not tested.</p>
+  <p><strong>Python packages</strong>, only for the parts that use them (<code>pip install &lt;name&gt;</code>, in a virtual environment):</p>
+  <table>
+  <thead>
+  <tr>
+  <th style="text-align: left;">Package</th>
+  <th style="text-align: left;">Needed by</th>
+  <th style="text-align: left;">Without it</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr>
+  <td style="text-align: left;"><code>mcp</code></td>
+  <td style="text-align: left;">the MCP bridge (<code>mcp/server.py</code>), <code>tests/test_mcp_server.py</code></td>
+  <td style="text-align: left;">version 2.x; without it the bridge prints the install command and stops</td>
+  </tr>
+  <tr>
+  <td style="text-align: left;"><code>py_landlock</code></td>
+  <td style="text-align: left;">the sandbox wall around every bridge call (<code>scripts/sandbox_wrapper.py</code>)</td>
+  <td style="text-align: left;">Linux with Landlock (kernel 5.13 or newer); without it the wall cannot be proven and no call runs</td>
+  </tr>
+  <tr>
+  <td style="text-align: left;"><code>pyseccomp</code></td>
+  <td style="text-align: left;">the sandbox wall (<code>scripts/sandbox_wrapper.py</code>)</td>
+  <td style="text-align: left;">Linux; denies <code>socket</code>, <code>connect</code>, <code>io_uring_setup</code> and <code>ptrace</code> inside the wall</td>
+  </tr>
+  <tr>
+  <td style="text-align: left;"><code>click</code></td>
+  <td style="text-align: left;">required by <code>calendarwiz</code></td>
+  <td style="text-align: left;"><code>calendarwiz</code> does not start: it prints one <code>[FAIL]</code> line naming the missing package and pointing at <code>requirementswiz setup calendarwiz</code> (it printed a traceback until D27, 2026-10-27)</td>
+  </tr>
+  <tr>
+  <td style="text-align: left;"><code>py_landlock</code></td>
+  <td style="text-align: left;">optional for <code>requirementswiz</code></td>
+  <td style="text-align: left;"><code>requirementswiz setup --all</code> cannot probe the sandbox wall without it, and says so instead; the bridge's wall needs it too (see the bridge packages above)</td>
+  </tr>
+  <tr>
+  <td style="text-align: left;"><code>pyfiglet</code></td>
+  <td style="text-align: left;">required by <code>bannerwiz</code>; optional for <code>godfatherwiz</code></td>
+  <td style="text-align: left;"><code>bannerwiz</code> says <code>[FAIL] missing package(s)</code> with the install command; <code>godfatherwiz</code> prints a plain title instead of the banner</td>
+  </tr>
+  <tr>
+  <td style="text-align: left;"><code>pyseccomp</code></td>
+  <td style="text-align: left;">optional for <code>requirementswiz</code></td>
+  <td style="text-align: left;"><code>requirementswiz setup --all</code> cannot probe the sandbox wall without it, and says so instead; the bridge's wall needs it too (see the bridge packages above)</td>
+  </tr>
+  <tr>
+  <td style="text-align: left;"><code>pytest</code></td>
+  <td style="text-align: left;">optional for <code>supremewiz</code></td>
+  <td style="text-align: left;"><code>supremewiz test</code> refuses: <code>pytest is not installed in this Python</code>, with the install command</td>
+  </tr>
+  <tr>
+  <td style="text-align: left;"><code>rich</code></td>
+  <td style="text-align: left;">required by <code>bannerwiz</code>, <code>calendarwiz</code>; optional for <code>examwiz</code>, <code>godfatherwiz</code></td>
+  <td style="text-align: left;"><code>bannerwiz</code> says <code>[FAIL] missing package(s)</code>; <code>calendarwiz</code> needs it too; <code>examwiz court</code> needs it for its screens (its other commands do not); <code>godfatherwiz</code> prints a plain title</td>
+  </tr>
+  <tr>
+  <td style="text-align: left;"><code>sqlalchemy</code></td>
+  <td style="text-align: left;">optional for <code>sqlwiz</code></td>
+  <td style="text-align: left;"><code>sqlwiz</code>'s database commands say <code>[FAIL] SQLAlchemy not installed</code></td>
+  </tr>
+  <tr>
+  <td style="text-align: left;"><code>PyYAML</code></td>
+  <td style="text-align: left;">optional for <code>privacywiz</code></td>
+  <td style="text-align: left;"><code>privacywiz</code> reads its policy file with its own small YAML reader instead</td>
+  </tr>
+  </tbody>
+  </table>
+  <p>Every wizard's own list is its <code>deps.toml</code>; a wizard without one needs no package.</p>
+  <p><strong>Programs</strong>, only for the commands that use them:</p>
+  <table>
+  <thead>
+  <tr>
+  <th style="text-align: left;">Program</th>
+  <th style="text-align: left;">Used by</th>
+  <th style="text-align: left;">For</th>
+  <th style="text-align: left;">How to get it</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr>
+  <td style="text-align: left;"><code>git</code></td>
+  <td style="text-align: left;">the toolkit</td>
+  <td style="text-align: left;">cloning the repository; <code>scripts/precommit_check.py</code>; <code>commandlinewiz</code>'s suite</td>
+  <td style="text-align: left;"><code>sudo apt-get install git</code></td>
+  </tr>
+  <tr>
+  <td style="text-align: left;"><code>ollama</code></td>
+  <td style="text-align: left;"><code>codeguardwiz</code>, <code>commandlinewiz</code>, <code>examwiz</code>, <code>godfatherwiz</code>, <code>helpwiz</code>, <code>mode-manifestingwiz</code>, <code>modelfilewiz</code>, <code>ollamawiz</code></td>
+  <td style="text-align: left;">every command that asks a local model (the daemon at <code>127.0.0.1:11434</code>) and at least one model pulled</td>
+  <td style="text-align: left;">https://ollama.com/download</td>
+  </tr>
+  <tr>
+  <td style="text-align: left;"><code>jq</code></td>
+  <td style="text-align: left;"><code>jsonwiz</code></td>
+  <td style="text-align: left;"><code>jsonwiz jq</code> only</td>
+  <td style="text-align: left;"><code>sudo apt-get install jq</code>, or <code>jsonwiz install-jq</code></td>
+  </tr>
+  <tr>
+  <td style="text-align: left;"><code>lua</code></td>
+  <td style="text-align: left;"><code>truthdwiz</code></td>
+  <td style="text-align: left;"><code>truthdwiz verify --check lua</code> only</td>
+  <td style="text-align: left;"><code>sudo apt-get install lua5.4</code></td>
+  </tr>
+  <tr>
+  <td style="text-align: left;"><code>espeak-ng</code></td>
+  <td style="text-align: left;"><code>voicewiz</code></td>
+  <td style="text-align: left;">the espeak voice</td>
+  <td style="text-align: left;"><code>sudo apt-get install espeak-ng</code></td>
+  </tr>
+  <tr>
+  <td style="text-align: left;"><code>piper</code></td>
+  <td style="text-align: left;"><code>voicewiz</code></td>
+  <td style="text-align: left;">the Piper voices</td>
+  <td style="text-align: left;"><code>voicewiz setup piper</code> (installs <code>piper-tts</code> into <code>~/piper-env</code>; needs the network)</td>
+  </tr>
+  <tr>
+  <td style="text-align: left;"><code>aplay</code></td>
+  <td style="text-align: left;"><code>voicewiz</code></td>
+  <td style="text-align: left;">playing speech (or <code>paplay</code>, or <code>afplay</code> on macOS)</td>
+  <td style="text-align: left;"><code>sudo apt-get install alsa-utils</code></td>
+  </tr>
+  <tr>
+  <td style="text-align: left;"><code>curl</code></td>
+  <td style="text-align: left;"><code>commandlinewiz</code></td>
+  <td style="text-align: left;">the Ollama check in <code>commandlinewiz</code>'s suite</td>
+  <td style="text-align: left;"><code>sudo apt-get install curl</code></td>
+  </tr>
+  <tr>
+  <td style="text-align: left;"><code>bash</code></td>
+  <td style="text-align: left;"><code>supremewiz</code></td>
+  <td style="text-align: left;">shell syntax checks</td>
+  <td style="text-align: left;">present on Linux</td>
+  </tr>
+  <tr>
+  <td style="text-align: left;"><code>tmux</code></td>
+  <td style="text-align: left;"><code>bashwiz</code></td>
+  <td style="text-align: left;"><code>bashwiz tmux</code> only (the session commands absorbed from the toolkit's tmuxwiz, D29)</td>
+  <td style="text-align: left;"><code>sudo apt-get install tmux</code>, or <code>requirementswiz setup bashwiz</code></td>
+  </tr>
+  </tbody>
+  </table>
+  <p><strong>The owner's base repository.</strong> These wizards were written for the private <code>~/wizard_central</code> and say so and stop without it:</p>
+  <ul>
+  <li><code>bootstrapwiz</code>: admits wizards into <code>~/wizard_central</code> and <code>~/bin</code>; nothing to do without them.</li>
+  <li><code>mappingwiz</code>: audits <code>~/wizard_central</code>; says <code>[FAIL] there is no wizard_central folder</code> without it.</li>
+  <li><code>dotfilewiz</code>: keeps its vault in <code>~/wizard_central/dotfile-vault</code>.</li>
+  <li><code>privacywiz</code>: reads the fleet at <code>WIZARD_CENTRAL_HOME</code>, default <code>~/wizard_central</code>.</li>
+  <li><code>manualwiz</code>: its fleet search reads <code>~/wizard_central</code>; the other commands do not need it.</li>
+  </ul>
+  <!-- /gen:requirements -->
+
+  <hr />
+  <h2>🚀 Getting started</h2>
+  <p>From a fresh Linux machine (Debian, Ubuntu or Chromebook Linux):</p>
+  <pre><code class="language-bash">sudo apt-get update
+  sudo apt-get install -y git python3 python3-venv
+  git clone https://github.com/rewardsbycode-eng/wiz-central-pro-AI-modes-toolkit.git
+  cd wiz-central-pro-AI-modes-toolkit
+  python3 --version                     # must be 3.12 or newer
+  python3 -m venv .venv                 # .venv is in .gitignore
+  . .venv/bin/activate                  # again in every new terminal
+  </code></pre>
+  <p>The repository is private: cloning it needs a GitHub account the owner has added as a collaborator.</p>
+  <p>Then only what you will use (see <strong>What you need</strong>):</p>
+  <pre><code class="language-bash">pip install mcp py_landlock pyseccomp      # the MCP bridge and its sandbox wall
+  pip install pyfiglet rich click            # bannerwiz and calendarwiz; the screens of examwiz and godfatherwiz
+  pip install pytest sqlalchemy PyYAML       # only for supremewiz test, sqlwiz's database commands, privacywiz
+  </code></pre>
+  <p>Run everything from the repository root. A first check, in a few seconds each:</p>
+  <pre><code class="language-bash">python3 tests/wizard_validation.py   # registry checks
+  python3 tests/test_compose.py        # composer, fingerprints, cross-process reproducibility
+  python3 tests/test_ported.py         # every ported wizard runs through the registry
+  python3 wizards/helpwiz/bin/helpwiz list   # the wizards, from the registry
+  </code></pre>
+  <p>The full test loop runs every test file. On the owner's Chromebook a full loop took 26.5 minutes (2026-10-27);
+  from the second loop on, it prints its own estimate from your machine's history:</p>
+  <pre><code class="language-bash">python3 scripts/loop.py              # must end: LOOP GREEN (full)
+  </code></pre>
+  <p><strong>For a green loop, install <code>click</code>, <code>rich</code>, <code>py_landlock</code> and <code>pyseccomp</code> first</strong>, and <code>mcp</code> for the loop to test
+  the bridge. Measured in a virtual environment with no packages (2026-10-27): without <code>click</code> six test files fail,
+  because <code>calendarwiz</code> crashes; without <code>py_landlock</code>, <code>tests/test_sandbox.py</code> fails (one test does not skip as the
+  others do; not fixed yet); without <code>mcp</code> the bridge's tests say SKIP and the loop can still end green, so a green
+  loop without <code>mcp</code> says nothing about the bridge. Without <code>pyfiglet</code>, bannerwiz's drawing tests say SKIP. What each
+  result means is in <code>docs/TESTING.md</code>.</p>
+  <h3>Compose modes into a system prompt</h3>
+  <pre><code class="language-python">import sys
+  sys.path.insert(0, &quot;src&quot;)
+
+  from engine.compose import compose
+
+  result = compose(
+      [&quot;privacywiz&quot;, &quot;stepwiz&quot;, &quot;apijsonwiz&quot;],
+      user_query=&quot;Summarize this support ticket.&quot;,
+  )
+
+  print(result.system_prompt)   # one prompt, modes ordered by priority
+  print(result.fingerprint)     # SHA-256 of that prompt
+  print(result.modes)           # the modes in the order they appear in the prompt
+  messages = result.as_messages()   # [{&quot;role&quot;: &quot;system&quot;, ...}, {&quot;role&quot;: &quot;user&quot;, ...}]
+  </code></pre>
+  <p><code>compose()</code> builds the prompt; it does not call a model. You send it with your own chat call.</p>
+  <p>Higher-priority categories come first, and the prompt tells the model that the mode listed first wins any conflict:</p>
+  <table>
+  <thead>
+  <tr>
+  <th style="text-align: left;">Category</th>
+  <th style="text-align: center;">Priority</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr>
+  <td style="text-align: left;">Governance &amp; Safety Guardrails</td>
+  <td style="text-align: center;">105</td>
+  </tr>
+  <tr>
+  <td style="text-align: left;">Governance &amp; Safety</td>
+  <td style="text-align: center;">100</td>
+  </tr>
+  <tr>
+  <td style="text-align: left;">Reasoning Modes</td>
+  <td style="text-align: center;">80</td>
+  </tr>
+  <tr>
+  <td style="text-align: left;">Domain Expertise</td>
+  <td style="text-align: center;">60</td>
+  </tr>
+  <tr>
+  <td style="text-align: left;">Specialized AI</td>
+  <td style="text-align: center;">50</td>
+  </tr>
+  <tr>
+  <td style="text-align: left;">Output Styles</td>
+  <td style="text-align: center;">40</td>
+  </tr>
+  <tr>
+  <td style="text-align: left;">Data &amp; Integration</td>
+  <td style="text-align: center;">30</td>
+  </tr>
+  <tr>
+  <td style="text-align: left;">Performance &amp; Scale</td>
+  <td style="text-align: center;">10</td>
+  </tr>
+  </tbody>
+  </table>
+  <p><strong>What is reproducible.</strong> The same modes, the same prompt text and the same format version always produce a byte-identical system prompt, whatever order the handles are given in. The tests check this across separate Python processes with different hash seeds, and the saved fingerprints in <code>tests/golden/</code> make any accidental edit to a mode fail a test.</p>
+  <p><strong>What is not.</strong> This says nothing about what a language model does with the prompt. Model output can vary between runs, and a prompt can steer a model but not force it. Priority order is guidance to the model, not enforcement. No test measures whether a mode changes a model's answers.</p>
+  <h3>Run a ported wizard</h3>
+  <p>From the shell, each wizard is its own program: <code>python3 wizards/&lt;name&gt;/bin/&lt;name&gt; --help</code>. From Python:</p>
+  <pre><code class="language-python">from engine.ported import run
+
+  r = run(&quot;@gitwiz&quot;, [&quot;find&quot;, &quot;commit&quot;])   # a subprocess; returns CompletedProcess
+  print(r.returncode, r.stdout)
+  </code></pre>
+  <p>Only the wizards in the <code>PORTED</code> table in <code>src/engine/ported.py</code> can be run this way (the list is under
+  <strong>The wizards</strong> below). A command a wizard marks person-only is refused through the registry: a write needs a human
+  at a terminal. <code>@writewiz</code> runs everything except its consent commands (<code>commit</code>, <code>rollback</code>, <code>discard</code>,
+  <code>purge-old</code>, <code>unprotect</code>). <code>python3 tests/test_ported.py</code> checks them. Every command of every wizard is in
+  <code>docs/COMMANDS.md</code>.</p>
+  <h3>Export the tool wizards</h3>
+  <pre><code class="language-python">from engine.wiz_modes_registry import (
+      get_full_wiz_specs, export_llm_tools,
+  )
+
+  specs = get_full_wiz_specs()        # every spec, keyed by handle (&quot;@debugwiz&quot;)
+  tools = export_llm_tools()          # the 110 roster tools; AI modes are not included
+  some_category = next(iter(specs.values())).category
+  tools = export_llm_tools(categories=[some_category])   # a smaller list
+  </code></pre>
+  <p><strong>Most of these schemas have no code behind them.</strong> The export covers the whole roster, and only the wizards in the
+  <code>PORTED</code> table can run. To give a model only tools that work, use the MCP bridge, which offers only listed commands of
+  ported wizards.</p>
+  <p>AI modes are instructions, not functions, so the default export leaves them out (<code>include_ai_modes=True</code> adds them). They are registered with <code>deterministic=False</code>, because model output is not deterministic.</p>
+  <p><strong>Renamed modes.</strong> Five modes originally shared a handle with a roster tool wizard, so they were renamed with the same meaning: <code>@chainwiz</code> is now <code>@stepwiz</code>, <code>@legwiz</code> is now <code>@lawwiz</code>, <code>@cachewiz</code> is now <code>@memowiz</code>, <code>@graphqlwiz</code> is now <code>@gqlwiz</code>, <code>@debugwiz</code> is now <code>@rootcausewiz</code>. All 75 modes are registered.</p>
+  <h3>The MCP bridge</h3>
+  <p><code>mcp/server.py</code> lets an MCP client use the AI modes as prompts and the ported wizards as tools, on this machine
+  (ollmcp is the client verified end to end so far). It needs <code>pip install mcp</code> (version 2), and the wall needs
+  <code>py_landlock</code> and <code>pyseccomp</code> on Linux. <code>@mcpwiz</code> is its settings panel: <code>python3 wizards/mcpwiz/bin/mcpwiz status</code>;
+  <code>python3 mcp/server.py --check</code> says what is installed and what is switched on.</p>
+  <p>What the tests prove (<code>tests/test_mcp_server.py</code>, <code>tests/test_mcpwiz.py</code>, <code>tests/test_guardrails.py</code>, <code>tests/test_sandbox.py</code>):</p>
+  <ul>
+  <li><strong>Nothing is open by default.</strong> Only the receipts log and the 9 guard modes are on. The bridge, prompts, tools and
+    each single tool are switched on by a person (asked twice at a terminal, or <code>--yes</code> in a script they run); a switch is read on every call, and
+    <code>mcpwiz panic</code> turns everything off and removes every grant at once.</li>
+  <li><strong>Only listed commands are tools.</strong> A wizard is offered only through its own <code>wizards/&lt;name&gt;/mcp.json</code>; 12 wizards
+    ship one. A command of class <code>never</code>, or one the registry marks person-only, is never offered or run.</li>
+  <li><strong>Paths need a grant.</strong> Every path a tool is given must lie inside a folder a person granted, for 1 minute to 33 days
+    (<code>mcpwiz grant</code>, asked twice), at most 20 grants at a time; links and <code>..</code> are resolved first. A missing or expired grant is a
+    refusal, and the refusal is receipted.</li>
+  <li><strong>Guard modes check each call before it runs</strong>: 9 built of 23 planned. Only a person at a terminal can turn one off.</li>
+  <li><strong>Each call runs behind a wall</strong>: no input, an empty working folder, a throw-away HOME, a short environment, a time
+    limit (at most 600 seconds), output cut at 64 KB. Landlock lets it read the toolkit's code and write only inside the
+    granted folders and its throw-away HOME; seccomp denies <code>socket</code>, <code>connect</code>, <code>io_uring_setup</code> and <code>ptrace</code>. If the wall cannot be built and
+    proven, the call does not run.</li>
+  <li><strong>Every call, grant and refusal is written to a hash-chained receipts log</strong> (<code>~/.mcp-wizard/receipts.log</code>). The chain
+    has no key: it shows an edit in the middle; it does not stop someone who can rewrite the whole file.</li>
+  </ul>
+  <p>What the bridge does not cover: a model that has its own shell, outside the server, is outside the gate. The
+  godfatherwiz REPL's model does not go through the bridge either; it is limited to a fixed list of look-only wizards
+  (see <strong>Status</strong>), and moving it behind the gate is planned (see <strong>Coming</strong>).</p>
+  <hr />
+  <h2>🧰 The wizards</h2>
+  <p><em>Generated.</em> Every wizard that runs here. <strong>Needs</strong>: what it needs beyond Python (packages from its <code>deps.toml</code>,
+  programs, the owner's base repository). <strong>MCP tools</strong>: commands offered as tools / commands in its <code>mcp.json</code>, when it
+  has one; every tool still needs a person to switch it on. <strong>Person only</strong>: commands the registry refuses to run for a
+  model or a script.</p>
+  <!-- gen:wizards (scripts/gen_readme.py; do not edit by hand) -->
+  <table>
+  <thead>
+  <tr>
+  <th style="text-align: left;">Wizard</th>
+  <th style="text-align: left;">What it is</th>
+  <th style="text-align: left;">Needs</th>
+  <th style="text-align: left;">MCP tools</th>
+  <th style="text-align: left;">Person only</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr>
+  <td style="text-align: left;"><code>@bannerwiz</code></td>
+  <td style="text-align: left;">ASCII banner maker: stacked block murals with colour and fusion looks, every FIGlet font, 18 style presets, auto-fit to the terminal, saved profiles and an export of one text in every font.</td>
+  <td style="text-align: left;"><code>pyfiglet</code>, <code>rich</code></td>
+  <td style="text-align: left;">11 of 18</td>
+  <td style="text-align: left;">none</td>
+  </tr>
+  <tr>
+  <td style="text-align: left;"><code>@bashwiz</code></td>
+  <td style="text-align: left;">Looks at your shell setup and adds the ll and la aliases to ~/.bashrc or ~/.zshrc.</td>
+  <td style="text-align: left;"><code>tmux</code></td>
+  <td style="text-align: left;">none</td>
+  <td style="text-align: left;"><code>apply</code>, <code>tmux</code></td>
+  </tr>
+  <tr>
+  <td style="text-align: left;"><code>@bootstrapwiz</code></td>
+  <td style="text-align: left;">The fleet conductor (admission authority): scaffold a new wizard, certify it, register it in the manifest and link it, plus lint, census, verify, retire and amend.</td>
+  <td style="text-align: left;"><code>~/wizard_central</code></td>
+  <td style="text-align: left;">none</td>
+  <td style="text-align: left;"><code>new</code>, <code>resume</code>, <code>retire</code>, <code>amend</code></td>
+  </tr>
+  <tr>
+  <td style="text-align: left;"><code>@calendarwiz</code></td>
+  <td style="text-align: left;">Manage past and future events, dates, and schedules.</td>
+  <td style="text-align: left;"><code>click</code>, <code>rich</code></td>
+  <td style="text-align: left;">none</td>
+  <td style="text-align: left;">none</td>
+  </tr>
+  <tr>
+  <td style="text-align: left;"><code>@codeguardwiz</code></td>
+  <td style="text-align: left;">Audits a source file with a local Ollama model and lists what it found; scans folders, filters by severity, explains a line, compares with the last audit and prints a test skeleton.</td>
+  <td style="text-align: left;"><code>ollama</code></td>
+  <td style="text-align: left;">none</td>
+  <td style="text-align: left;">none</td>
+  </tr>
+  <tr>
+  <td style="text-align: left;"><code>@commandlinewiz</code></td>
+  <td style="text-align: left;">Runs declared fleet checks and writes a timestamped census: the shared test suites, git state, the Ollama daemon, and --help for every ported wizard.</td>
+  <td style="text-align: left;"><code>ollama</code>, <code>curl</code></td>
+  <td style="text-align: left;">none</td>
+  <td style="text-align: left;"><code>run</code>, <code>history</code>, <code>sessions</code></td>
+  </tr>
+  <tr>
+  <td style="text-align: left;"><code>@daemonwiz</code></td>
+  <td style="text-align: left;">Keeps a registry of named background commands: starts and stops them, says whether each is alive (told by pid and start time, so a reused pid is never signalled) and shows what they printed.</td>
+  <td style="text-align: left;">nothing</td>
+  <td style="text-align: left;">none</td>
+  <td style="text-align: left;"><code>register</code>, <code>unregister</code>, <code>start</code>, <code>stop</code>, <code>sweep</code></td>
+  </tr>
+  <tr>
+  <td style="text-align: left;"><code>@debugwiz</code></td>
+  <td style="text-align: left;">Diagnosis oracle for Python code: traceback autopsy, error classification, hotspots, undefined names, missing imports and heuristic fix suggestions.</td>
+  <td style="text-align: left;">nothing</td>
+  <td style="text-align: left;">none</td>
+  <td style="text-align: left;">none</td>
+  </tr>
+  <tr>
+  <td style="text-align: left;"><code>@diffwiz</code></td>
+  <td style="text-align: left;">Read-only diffs: unified, context, word-level and summary diffs of two text files, and a tree comparison that skips .git, .venv, <strong>pycache</strong> and node_modules.</td>
+  <td style="text-align: left;">nothing</td>
+  <td style="text-align: left;">7 of 7</td>
+  <td style="text-align: left;">none</td>
+  </tr>
+  <tr>
+  <td style="text-align: left;"><code>@docwiz</code></td>
+  <td style="text-align: left;">File and folder toolkit: read, write, append, copy, move, rename, back up and restore, hash, search, tree, head, tail and count lines or words.</td>
+  <td style="text-align: left;">nothing</td>
+  <td style="text-align: left;">none</td>
+  <td style="text-align: left;"><code>write</code>, <code>append</code>, <code>copy</code>, <code>move</code>, <code>delete</code>, <code>mkdir</code>, <code>touch</code>, <code>empty</code>, <code>backup</code>, <code>restore</code>, <code>decode</code>, <code>replace</code>, <code>rename</code></td>
+  </tr>
+  <tr>
+  <td style="text-align: left;"><code>@dotfilewiz</code></td>
+  <td style="text-align: left;">Keeps vault copies of the dot files you choose (.bashrc, .gitconfig, a .config folder), tells you when the live ones drift, shows the difference and puts them back.</td>
+  <td style="text-align: left;"><code>~/wizard_central</code></td>
+  <td style="text-align: left;">none</td>
+  <td style="text-align: left;"><code>track</code>, <code>untrack</code>, <code>snapshot</code>, <code>restore</code>, <code>backup</code></td>
+  </tr>
+  <tr>
+  <td style="text-align: left;"><code>@examwiz</code></td>
+  <td style="text-align: left;">Puts a local Ollama model on the bench with a battery of missions and judges each reply against the disk and the battery's expectations: exam lets the machine judge (it decides only what the disk proves or what is clear; the rest is UNVERIFIED), court lets a person rule each reply.</td>
+  <td style="text-align: left;"><code>rich</code> (optional), <code>ollama</code></td>
+  <td style="text-align: left;">4 of 6</td>
+  <td style="text-align: left;"><code>court</code></td>
+  </tr>
+  <tr>
+  <td style="text-align: left;"><code>@gitwiz</code></td>
+  <td style="text-align: left;">Plain-language git manual lookup: print the manual or find a term in it.</td>
+  <td style="text-align: left;">nothing</td>
+  <td style="text-align: left;">2 of 2</td>
+  <td style="text-align: left;">none</td>
+  </tr>
+  <tr>
+  <td style="text-align: left;"><code>@godfatherwiz</code></td>
+  <td style="text-align: left;">The Grand Master: fleet dispatcher and REPL cockpit.</td>
+  <td style="text-align: left;"><code>pyfiglet</code> (optional), <code>rich</code> (optional), <code>ollama</code></td>
+  <td style="text-align: left;">none</td>
+  <td style="text-align: left;"><code>repl</code>, <code>run</code>, <code>task</code>, <code>heal</code>, <code>consent</code>, <code>schedule</code></td>
+  </tr>
+  <tr>
+  <td style="text-align: left;"><code>@grantwiz</code></td>
+  <td style="text-align: left;">The front door to mcpwiz's folder grants: list the current grants, check whether a path can be granted, and print the mcpwiz command a person would run.</td>
+  <td style="text-align: left;">nothing</td>
+  <td style="text-align: left;">3 of 5</td>
+  <td style="text-align: left;"><code>add</code>, <code>revoke</code></td>
+  </tr>
+  <tr>
+  <td style="text-align: left;"><code>@helpwiz</code></td>
+  <td style="text-align: left;">The fleet's read-only help and guide: a numbered menu, <code>faq</code>, <code>categories</code>, <code>modes</code>, <code>wizard</code> and <code>topics</code> answer from the registry, the wizards' READMEs and the docs with no model; it also lists the citizens, shows and compares their charters, and answers questions with a local Ollama model that is shown only the matching charters, with the charters it saw named after the answer and any command it quoted that is not in them flagged.</td>
+  <td style="text-align: left;"><code>ollama</code></td>
+  <td style="text-align: left;">10 of 16</td>
+  <td style="text-align: left;">none</td>
+  </tr>
+  <tr>
+  <td style="text-align: left;"><code>@jsonwiz</code></td>
+  <td style="text-align: left;">Checks, reshapes and compares JSON with named failures (strict: no NaN, no duplicate keys), runs the real jq with the filter as a single argument and a cleared environment, and pulls the JSON out of a model's reply.</td>
+  <td style="text-align: left;"><code>jq</code></td>
+  <td style="text-align: left;">11 of 13</td>
+  <td style="text-align: left;"><code>install-jq</code></td>
+  </tr>
+  <tr>
+  <td style="text-align: left;"><code>@knowledgewiz</code></td>
+  <td style="text-align: left;">The estate's memory keeper: captures lessons and notes from a folder as drafts, lists, shows, searches, tags and exports the knowledge base, and archives entries.</td>
+  <td style="text-align: left;">nothing</td>
+  <td style="text-align: left;">none</td>
+  <td style="text-align: left;"><code>ratify</code></td>
+  </tr>
+  <tr>
+  <td style="text-align: left;"><code>@manualwiz</code></td>
+  <td style="text-align: left;">The documentation auditor: censuses the home folder for projects with a real README, a stub or none, writes ~/MANUAL.md from the documented ones (only over a MANUAL.md it wrote itself), and verifies that every command the manual lists is on disk.</td>
+  <td style="text-align: left;"><code>~/wizard_central</code></td>
+  <td style="text-align: left;">none</td>
+  <td style="text-align: left;">none</td>
+  </tr>
+  <tr>
+  <td style="text-align: left;"><code>@mappingwiz</code></td>
+  <td style="text-align: left;">Audits the private wizard_central estate for mappings that no longer match reality: dead links in ~/bin, bootstrap records, the README manifest and imports.</td>
+  <td style="text-align: left;"><code>~/wizard_central</code></td>
+  <td style="text-align: left;">none</td>
+  <td style="text-align: left;"><code>fix</code></td>
+  </tr>
+  <tr>
+  <td style="text-align: left;"><code>@mcpwiz</code></td>
+  <td style="text-align: left;">Settings and permissions for the MCP bridge: what is switched on, which folders are granted and for how long, the per-tool switches and the receipts log.</td>
+  <td style="text-align: left;">nothing</td>
+  <td style="text-align: left;">none</td>
+  <td style="text-align: left;"><code>on</code>, <code>grant</code>, <code>preset</code>, <code>menu</code>, <code>guard-mode-off</code>, <code>guardrail-off</code></td>
+  </tr>
+  <tr>
+  <td style="text-align: left;"><code>@mode-manifestingwiz</code></td>
+  <td style="text-align: left;">The fleet's universal forge, create-only: survey a REPL, have a local Ollama draft a mode spec, and create new modes, tools, skills and tasks on your own machine.</td>
+  <td style="text-align: left;"><code>ollama</code></td>
+  <td style="text-align: left;">none</td>
+  <td style="text-align: left;"><code>forge</code>, <code>forge-tool</code>, <code>forge-skill</code>, <code>ratify</code>, <code>retire</code>, <code>mode-approve</code>, <code>mode-revoke</code>, <code>guardrail-approve</code>, <code>guardrail-revoke</code></td>
+  </tr>
+  <tr>
+  <td style="text-align: left;"><code>@modelfilewiz</code></td>
+  <td style="text-align: left;">Governs the Modelfiles a local Ollama serves: lists them, reads them, captures them into ~/.modelfilewiz/sources, reports drift between live and captured, and rebuilds a model from its source.</td>
+  <td style="text-align: left;"><code>ollama</code></td>
+  <td style="text-align: left;">none</td>
+  <td style="text-align: left;"><code>record</code>, <code>record-all</code>, <code>rebuild</code></td>
+  </tr>
+  <tr>
+  <td style="text-align: left;"><code>@ollamawiz</code></td>
+  <td style="text-align: left;">Looks at the Ollama daemon on this machine: installed models and sizes, what is loaded and how much is on the GPU, digests, a model's card and parameters, a timed question to a model, and which listed tool-calling models fit this device.</td>
+  <td style="text-align: left;"><code>ollama</code></td>
+  <td style="text-align: left;">none</td>
+  <td style="text-align: left;"><code>stop</code>, <code>enable-catalog</code>, <code>ollama-catalog</code></td>
+  </tr>
+  <tr>
+  <td style="text-align: left;"><code>@privacyscanwiz</code></td>
+  <td style="text-align: left;">Privacy enforcement for a fleet of Python wizards: scans their code for telemetry and analytics libraries, hardcoded secrets and non-allowlisted URLs, audits a whole fleet, keeps a hash-chained audit log, and quarantines a non-compliant wizard.</td>
+  <td style="text-align: left;"><code>PyYAML</code> (optional), <code>~/wizard_central</code></td>
+  <td style="text-align: left;">none</td>
+  <td style="text-align: left;"><code>quarantine</code>, <code>unquarantine</code></td>
+  </tr>
+  <tr>
+  <td style="text-align: left;"><code>@pythonwiz</code></td>
+  <td style="text-align: left;">The fleet's syntax gate: compiles (never runs) a Python file or a whole tree and reports the exact error, plus read-only audits (outline, imports, complexity, docstrings, secrets, score and more).</td>
+  <td style="text-align: left;">nothing</td>
+  <td style="text-align: left;">22 of 22</td>
+  <td style="text-align: left;">none</td>
+  </tr>
+  <tr>
+  <td style="text-align: left;"><code>@readwiz</code></td>
+  <td style="text-align: left;">Read-only verb gate: judges a raw shell command and answers ALLOW or DENIED.</td>
+  <td style="text-align: left;">nothing</td>
+  <td style="text-align: left;">3 of 3</td>
+  <td style="text-align: left;">none</td>
+  </tr>
+  <tr>
+  <td style="text-align: left;"><code>@repairwiz</code></td>
+  <td style="text-align: left;">The healer for broken Python files: diagnose with the interpreter's own compile(), fix what it names (a missing colon, a bracket never closed or not matching), and STAGE the fix through writewiz.</td>
+  <td style="text-align: left;">nothing</td>
+  <td style="text-align: left;">none</td>
+  <td style="text-align: left;">none</td>
+  </tr>
+  <tr>
+  <td style="text-align: left;"><code>@repl-managerwiz</code></td>
+  <td style="text-align: left;">Finds the REPLs in your home folder and reports which of seven doctrine organs each has; can add one organ to a REPL (backup first, checked first) or make a new REPL from a template.</td>
+  <td style="text-align: left;">nothing</td>
+  <td style="text-align: left;">none</td>
+  <td style="text-align: left;"><code>graft</code>, <code>new</code></td>
+  </tr>
+  <tr>
+  <td style="text-align: left;"><code>@requirementswiz</code></td>
+  <td style="text-align: left;">Owns the fleet's dependency truth: scan a wizard's imports, declare them in its deps.toml, aggregate into a fleet requirements.txt, lock installed versions, and verify that every non-stdlib import is declared.</td>
+  <td style="text-align: left;"><code>py_landlock</code> (optional), <code>pyseccomp</code> (optional)</td>
+  <td style="text-align: left;">none</td>
+  <td style="text-align: left;"><code>install</code>, <code>setup</code></td>
+  </tr>
+  <tr>
+  <td style="text-align: left;"><code>@sqlwiz</code></td>
+  <td style="text-align: left;">SQL query builder, migration differ and EXPLAIN analyzer with 15 commands (query, validate, seed, dump, export and more).</td>
+  <td style="text-align: left;"><code>sqlalchemy</code> (optional)</td>
+  <td style="text-align: left;">none</td>
+  <td style="text-align: left;">none</td>
+  </tr>
+  <tr>
+  <td style="text-align: left;"><code>@supremewiz</code></td>
+  <td style="text-align: left;">Test runner for a project folder: scans Python, JSON and shell files for syntax errors, runs the project's own pytest suite (all, last failed, failed first, parallel), and keeps text, JSON and HTML reports with a run history in <project>/test_reports/.</td>
+  <td style="text-align: left;"><code>pytest</code> (optional), <code>bash</code></td>
+  <td style="text-align: left;">13 of 14</td>
+  <td style="text-align: left;"><code>clean</code></td>
+  </tr>
+  <tr>
+  <td style="text-align: left;"><code>@test-admissionwiz</code></td>
+  <td style="text-align: left;">DevOps reports with 11 commands: systemd services, listening ports, top processes, disk, network, journal, users, groups and sudo, crontab, uptime and a health summary.</td>
+  <td style="text-align: left;">nothing</td>
+  <td style="text-align: left;">0 of 11</td>
+  <td style="text-align: left;">none</td>
+  </tr>
+  <tr>
+  <td style="text-align: left;"><code>@todowiz</code></td>
+  <td style="text-align: left;">REPL-facing focus engine: records active work items (task, skill, script, ...) with an optional ref to where the artifact lives, scoped by project.</td>
+  <td style="text-align: left;">nothing</td>
+  <td style="text-align: left;">none</td>
+  <td style="text-align: left;"><code>rm</code></td>
+  </tr>
+  <tr>
+  <td style="text-align: left;"><code>@truthdwiz</code></td>
+  <td style="text-align: left;">The truthd verification daemon's client and server, local only: ping it, ask it to verify that a path exists or that a shipped Lua validator says OK, read its status and log, or list a directory straight from disk.</td>
+  <td style="text-align: left;"><code>lua</code></td>
+  <td style="text-align: left;">none</td>
+  <td style="text-align: left;"><code>serve</code></td>
+  </tr>
+  <tr>
+  <td style="text-align: left;"><code>@truthwiz</code></td>
+  <td style="text-align: left;">Honest context injector for LLM briefings: real directory listings, file contents, hashes, sizes, symlinks and git state read straight from disk, plus the TRUTH LAW text.</td>
+  <td style="text-align: left;">nothing</td>
+  <td style="text-align: left;">21 of 22</td>
+  <td style="text-align: left;">none</td>
+  </tr>
+  <tr>
+  <td style="text-align: left;"><code>@voicewiz</code></td>
+  <td style="text-align: left;">The know-it-all of voice setups: knows each speech engine (Piper, espeak-ng), checks what this machine has, walks a person through the setup one confirmed step at a time, lists the Piper voice catalog by language, plans downloads inside a size budget and the free disk, and speaks.</td>
+  <td style="text-align: left;"><code>espeak-ng</code>, <code>piper</code>, <code>aplay</code></td>
+  <td style="text-align: left;">none</td>
+  <td style="text-align: left;"><code>setup</code>, <code>get</code>, <code>remove</code>, <code>start</code></td>
+  </tr>
+  <tr>
+  <td style="text-align: left;"><code>@whiteboardwiz</code></td>
+  <td style="text-align: left;">The model whiteboard: drafts wait on a board and only a person at a terminal gives consent to ratify them (skill accept and wipe ask y/N and refuse a pipe or the registry; nothing is deleted).</td>
+  <td style="text-align: left;">nothing</td>
+  <td style="text-align: left;">none</td>
+  <td style="text-align: left;"><code>wipe</code></td>
+  </tr>
+  <tr>
+  <td style="text-align: left;"><code>@writewiz</code></td>
+  <td style="text-align: left;">Consent wall for file writes: propose content into quarantine, preview it, and commit only on a live human's 'y' at a terminal, with backups, rollback, protected paths and a journal.</td>
+  <td style="text-align: left;">nothing</td>
+  <td style="text-align: left;">none</td>
+  <td style="text-align: left;"><code>commit</code>, <code>rollback</code>, <code>discard</code>, <code>purge-old</code>, <code>unprotect</code></td>
+  </tr>
+  </tbody>
+  </table>
+  <!-- /gen:wizards -->
+
+  <hr />
+  <h2>🛣️ Coming</h2>
+  <p><em>Generated.</em> Placeholders for what is designed or decided and not built. None of it works yet; each line is removed
+  when its part is built and tested.</p>
+  <!-- gen:coming (scripts/gen_readme.py; do not edit by hand) -->
+  <p><strong>Read from the code:</strong></p>
+  <ul>
+  <li>[ ] <strong>14 guard modes designed, not built:</strong> <code>budgetwiz</code>, <code>consentwiz</code>, <code>fanoutwiz</code>, <code>instructionwiz</code>, <code>intactwiz</code>, <code>lookfirstwiz</code>, <code>manifestwiz</code>, <code>overwritewiz</code>, <code>pacewiz</code>, <code>persistencewiz</code>, <code>previewwiz</code>, <code>redactwiz</code>, <code>shellwiz</code>, <code>traversalwiz</code>. <code>python3 mcp/server.py --check</code> lists them as pending (<code>docs/GUARD_MODES.md</code>).</li>
+  <li>[ ] <strong>REPL engines:</strong> built: <code>ollama</code>; reserved, not built: <code>openai-compatible</code>. Choosing one that is not built gives one <code>[FAIL]</code> and sends nothing (<code>wizards/godfatherwiz/lib/engines.py</code>).</li>
+  </ul>
+  <p><strong>Decided or designed, not built yet</strong> (placeholders; each line goes when it is built and tested):</p>
+  <ul>
+  <li>[ ] <strong>Auto mode</strong>: a switch at the MCP gate that lets a model's writes through without asking. Today the REPL answers <code>/auto</code> with <code>[PLANNED] auto mode is not built yet</code> (D21; built after bonuswiz Rewind).</li>
+  <li>[ ] <strong>More model providers</strong> for the REPL: 16 in all (local: Ollama, LM Studio, llama.cpp, vLLM; remote: OpenAI, Anthropic, Azure OpenAI, Google Gemini, Groq, Hugging Face, Together AI, Meta, Mistral, DeepSeek, OpenRouter, xAI). A remote one only when you choose it; its key only on your own disk (D22).</li>
+  <li>[ ] <strong>The REPL's model calls through the bridge's gate</strong> (grants, guard modes, the wall, receipts); today a fixed list of look-only wizards is the interim (F5, decided 2026-10-27).</li>
+  <li>[ ] <strong>Your creations area</strong>: your own files, skills, tasks, tools and wizards in one folder in your home, outside the repository; you may delete only your own (D20).</li>
+  <li>[ ] <strong>Model calls from inside the wall</strong> (rung 4): a broker that makes only listed requests to Ollama, so <code>examwiz doctor</code> and the other daemon tools can run under the bridge. Until then, under the wall, <code>doctor</code> will say <code>[UNKNOWN]</code> instead of a wrong answer (D17).</li>
+  <li>[ ] <strong>Records grants</strong>: a grant for one file's records instead of a folder (designed in <code>docs/GRANTS_AND_RECEIPTS.md</code>).</li>
+  <li>[ ] <strong>bonuswiz with Rewind</strong>: undo what a session changed (roadmap).</li>
+  <li>[ ] <strong>From Novenioux_Gateway</strong>: stop with Esc twice and Ctrl+Z; a red/green diff of each write with one question per file; a model per mode; QFlash (the owner's port list, D23).</li>
+  </ul>
+  <!-- /gen:coming -->
+
+  <hr />
+  <h2>📁 Layout</h2>
+  <pre><code class="language-text">wiz-central-pro-AI-modes-toolkit/
+  ├── README.md                   # this page; its generated sections come from scripts/gen_readme.py
+  ├── src/engine/
+  │   ├── wiz_modes_registry.py   # WizardCategory, WizardSpec, WizardRosterRegistry
+  │   ├── ai_modes_data.py        # the 75 modes: handle, category, description
+  │   ├── ai_modes_prompts.py     # the 75 prompts (source of truth)
+  │   ├── compose.py              # compose(), fingerprints
+  │   ├── custom_modes.py         # your own modes, approved by hash (docs/CUSTOM_MODES.md)
+  │   ├── guardrails.py           # your own declarative guard rules, approved by hash
+  │   ├── ported.py               # the PORTED table: the 39 wizards that can be run
+  │   ├── license.py
+  │   └── conductor_certifier.py
+  ├── mcp/server.py               # the MCP bridge (needs: pip install mcp)
+  ├── wizards/                    # 39 command-line wizards, each with bin/, lib/ and README.md (see wizards/PORTING.md)
+  ├── tests/                      # one test file per wizard and per part; scripts/loop.py runs them all
+  │   ├── wizard_validation.py
+  │   └── golden/compose.json     # reference fingerprints
+  ├── scripts/
+  │   ├── loop.py                 # the full test loop
+  │   ├── precommit_check.py      # the commit check: what is staged is what was tested
+  │   ├── facts.py                # every number the docs state, counted from the code
+  │   ├── gen_readme.py           # writes the generated sections of this README
+  │   ├── gen_modes_doc.py        # regenerates docs/MODES.md
+  │   ├── gen_commands_doc.py     # regenerates docs/COMMANDS.md
+  │   ├── gen_mcp_manifests.py    # writes the wizards' mcp.json files
+  │   ├── sandbox_*.py            # the wall around bridge calls
+  │   ├── (port_, fix_, add_)*.py # hash-guarded change scripts, kept as the record of each change
+  │   └── one-time/               # scripts that have already been run
+  └── docs/                       # below
+  </code></pre>
+  <!-- gen:docs (scripts/gen_readme.py; do not edit by hand) -->
+
+  <pre><code class="language-text">docs/
+  ├── AI_MODES_USAGE.md       # how to use the AI modes, with examples
+  ├── ARCHITECTURE.md         # the parts and how a request flows
+  ├── BASE_ROSTER.md          # every wizard in the base `wizard_central` and its Pro name
+  ├── COMMANDS.md             # generated: every wizard command
+  ├── CUSTOM_MODES.md         # your own AI modes, approved by hash
+  ├── FLAKES.md               # tests that failed once, and how they are judged
+  ├── GRANTS_AND_RECEIPTS.md  # folder grants, records grants (designed), the receipts log
+  ├── GUARD_MODES.md          # the guard modes: what each refuses, and your own rules
+  ├── MANIFESTS.md            # `mcp.json`: which commands are tools, and their classes
+  ├── MCP_STATUS.md           # the bridge: what is verified, what is not, how to check
+  ├── MODES.md                # generated: every mode and its prompt
+  ├── SANDBOX.md              # the wall around every bridge call
+  ├── TESTING.md              # the loop, the commit check, what each result means
+  ├── USAGE.md                # usage examples; every Python example is run by `tests/test_usage_docs.py`
+  └── archive/                # done or replaced: WIZMODES-original.md, voicewiz_port_plan.md
+  </code></pre>
+  <!-- /gen:docs -->
+
+  <h2>✏️ Changing a mode</h2>
+  <ol>
+  <li>Edit its text in <code>src/engine/ai_modes_prompts.py</code>.</li>
+  <li><code>python3 scripts/gen_modes_doc.py</code></li>
+  <li><code>python3 tests/test_compose.py --update-golden</code></li>
+  <li><code>python3 scripts/loop.py</code>, then commit.</li>
+  </ol>
+  <p>If you skip step 2 or 3, a test fails. That is intentional.</p>
+  <h2>🔄 When the code changes</h2>
+  <p><code>python3 scripts/gen_readme.py</code> rewrites this README's generated sections; <code>--check</code> only says which are out of
+  date. The loop does not rewrite files while it tests them: it goes red, names the command, and you run it and look at
+  the diff. The data the generator cannot read from the code (each status row's state, the programs, the placeholders
+  under <strong>Coming</strong>, a line for each docs page) is at the top of <code>scripts/gen_readme.py</code>, and the test fails when that
+  data no longer matches the code.</p>
+  <h2>🔐 Licensing data</h2>
+  <p><code>beta_keys.json</code> and <code>certified_users.json</code> are listed in <code>.gitignore</code> and are never committed.</p>
+  <p class="meta">This is the project's README as published in its repository.</p>
+
+  <div class="article-foot">
+    <img class="article-seal" src="seal.webp" alt="MathSphere Nexus official corporate seal">
+  </div>
+
+  <footer>
+    <img class="foot-seal" src="seal.webp" alt="MathSphere Nexus official corporate seal">
+    <p>MathSphere Nexus — the parent company of Wizard Central.</p>
+    <p class="rule">A command is what you type. The name is what the project is.</p>
+    <p>Wizard Central Pro AI Modes Toolkit™ and MathSphere Nexus™ are trademarks of their owner. Wizard Central is not affiliated with Wiz, Inc.</p>
+  </footer>
+</div>
+</body>
+</html>

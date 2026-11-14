@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MathSphere Nexus Arbiter — README — MathSphere Nexus</title>
+<link rel="icon" href="seal.webp">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MathSphere Nexus">
+<meta property="og:title" content="MathSphere Nexus Arbiter — README">
+<meta property="og:description" content="The README of the MathSphere Nexus Arbiter — the project's own front door, as published in its repository.">
+<meta property="og:url" content="https://rewardsbycode-eng.github.io/mathspherenexus/arbiter-readme.html">
+<meta property="og:image" content="https://rewardsbycode-eng.github.io/mathspherenexus/seal.webp">
+<meta name="twitter:card" content="summary">
+<meta name="description" content="The README of the MathSphere Nexus Arbiter — the project's own front door, as published in its repository.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="site">
+    <img src="seal.webp" alt="MathSphere Nexus official corporate seal">
+    <span class="name">MathSphere Nexus</span>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="projects.html">Projects</a>
+      <a href="prototypes.html">Prototypes</a>
+      <a href="diary.html">Diary</a>
+      <a href="blog.html">Blog</a>
+    </nav>
+  </header>
+
+  <h1>MathSphere Nexus Arbiter — README</h1>
+  <p class="meta">The README as published in the project's repository</p>
+
+  <h2>MathSphere Nexus Arbiter</h2>
+  <blockquote>
+  <p>A lockable, unlockable, rollback-capable, externally anchorable integrity ledger for project state — the integrity layer version control does not provide, built to sit on top of version control itself.</p>
+  </blockquote>
+  <hr />
+  <h2>What MathSphere Nexus Arbiter is</h2>
+  <p>MathSphere Nexus Arbiter is a <strong>project-state integrity engine</strong>. It seals the state of files and directory trees, records their cryptographic fingerprints in an append-only, hash-chained ledger, and provides controlled mechanisms to verify, update, lock, and restore that state over time — restore today covers individual records; whole-tree restore is first on the build list in the honesty audit (docs/records/HONESTY_AUDIT_2026-11-04.md).</p>
+  <ol>
+  <li><strong>What was the state of this project when it was sealed?</strong></li>
+  <li><strong>Has anything changed since — and what, specifically?</strong></li>
+  <li><strong>Can I restore a known-good state without destroying the evidence of what happened?</strong></li>
+  </ol>
+  <p>Version control tracks change, but its history is mutable. Backups restore content but provide no tamper-evident proof. Checksums detect corruption but offer no recovery path. MathSphere Nexus Arbiter is the <strong>seal, lock, and audit layer</strong> that sits above version control and alongside backup.</p>
+  <hr />
+  <h2>What MathSphere Nexus Arbiter provides</h2>
+  <table>
+  <thead>
+  <tr>
+  <th>Capability</th>
+  <th>Guarantee</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr>
+  <td><strong>Seal</strong></td>
+  <td>SHA-256 fingerprints of files or trees, with monotonic version numbers</td>
+  </tr>
+  <tr>
+  <td><strong>Verify</strong></td>
+  <td>Constant-time comparison, plus per-file diff of what changed</td>
+  </tr>
+  <tr>
+  <td><strong>Update</strong></td>
+  <td>Optimistic concurrency — caller presents the previous hash</td>
+  </tr>
+  <tr>
+  <td><strong>Lock</strong></td>
+  <td>Record-level seal; a locked record rejects update and rollback</td>
+  </tr>
+  <tr>
+  <td><strong>Unlock</strong></td>
+  <td>Present the exact one-time token issued at locking — only the token's hash is ever stored, so the key itself is kept nowhere — verified against that hash, and the unlock is written to the audit log. A lost token means the lock is permanent, by design</td>
+  </tr>
+  <tr>
+  <td><strong>Rollback</strong></td>
+  <td>Restore a record from a content-addressed snapshot, <strong>verified before restore</strong> (whole-tree restore: build list, audit §2)</td>
+  </tr>
+  <tr>
+  <td><strong>Audit</strong></td>
+  <td>Append-only, hash-chained log, optionally anchored externally via OpenTimestamps (mechanism built; first live proof: build list, audit §4)</td>
+  </tr>
+  </tbody>
+  </table>
+  <hr />
+  <h2>What MathSphere Nexus Arbiter deliberately does not do</h2>
+  <ul>
+  <li><strong>No repair primitive.</strong> Corruption is addressed by rollback from a verified snapshot, never by blessing the corrupted state.</li>
+  <li><strong>No standalone hash-correction.</strong> A change is an <code>update</code>, not a rewrite.</li>
+  <li><strong>No anonymous unlock.</strong> Requires a one-time token and a logged reason.</li>
+  <li><strong>No branching, merging, or remotes.</strong> That is version control's job.</li>
+  </ul>
+  <hr />
+  <h2>Quickstart</h2>
+  <p>Requires Node.js 18+.</p>
+  <pre><code class="language-bash">git clone https://github.com/rewardsbycode-eng/MathSphere-Nexus-Arbiter.git
+  cd MathSphere-Nexus-Arbiter
+  chmod +x bin/*
+
+  guard-add --project demo report.pdf ./report.pdf
+  guard-verify --project demo report.pdf ./report.pdf
+  guard-snapshot-tree --project alpha alpha@v1.4.2 .
+  guard-verify-tree --project alpha alpha@v1.4.2 .
+  guard-lock --project alpha alpha@v1.4.2 &lt;manifest_hash&gt;
+  </code></pre>
+  <hr />
+  <h2>Documentation</h2>
+  <table>
+  <thead>
+  <tr>
+  <th>Document</th>
+  <th>Purpose</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr>
+  <td>docs/MathSphere-Nexus-Arbiter.md</td>
+  <td>The professional introduction / pitch</td>
+  </tr>
+  <tr>
+  <td>docs/threat-model.md</td>
+  <td>What MathSphere Nexus Arbiter protects against, and what it does not</td>
+  </tr>
+  <tr>
+  <td>docs/design.md</td>
+  <td>Invariants, data model, hash chain, why no Fix/Correct</td>
+  </tr>
+  <tr>
+  <td>docs/operations.md</td>
+  <td>Backup, key rotation, GC cadence, anchor cadence</td>
+  </tr>
+  <tr>
+  <td>docs/record-format.md</td>
+  <td>Schema, schema_version, migration rules</td>
+  </tr>
+  <tr>
+  <td>docs/rollback-semantics.md</td>
+  <td>Append-not-rewrite; forward-history survival</td>
+  </tr>
+  <tr>
+  <td>docs/lock-semantics.md</td>
+  <td>Token loss = permanent lock; this is by design</td>
+  </tr>
+  <tr>
+  <td>docs/compatibility.md</td>
+  <td>Git, VAULT, backup tools — what composes</td>
+  </tr>
+  <tr>
+  <td>docs/faq.md</td>
+  <td>Common questions</td>
+  </tr>
+  <tr>
+  <td>MATHSPHERE-NEXUS-ARBITER-READINESS-CHECKLIST.md</td>
+  <td>Definition of "professional" and build sequence</td>
+  </tr>
+  </tbody>
+  </table>
+  <p>Documentation note: every row in this table is a document that exists in this repository (verified against the tree on 2026-11-04; see the honesty audit (docs/records/HONESTY_AUDIT_2026-11-04.md), §6).</p>
+  <hr />
+  <h2>Status</h2>
+  <p>Pre-1.0. Data model and invariants are stable; CLI surface may change.</p>
+  <p class="meta">This is the project's README as published in its repository.</p>
+
+  <div class="article-foot">
+    <img class="article-seal" src="seal.webp" alt="MathSphere Nexus official corporate seal">
+  </div>
+
+  <footer>
+    <img class="foot-seal" src="seal.webp" alt="MathSphere Nexus official corporate seal">
+    <p>MathSphere Nexus — the parent company of Wizard Central.</p>
+    <p class="rule">A command is what you type. The name is what the project is.</p>
+    <p>Wizard Central Pro AI Modes Toolkit™ and MathSphere Nexus™ are trademarks of their owner. Wizard Central is not affiliated with Wiz, Inc.</p>
+  </footer>
+</div>
+</body>
+</html>
