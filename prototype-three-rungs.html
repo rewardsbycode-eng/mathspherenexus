@@ -28,6 +28,7 @@
       <a href="diary.html">Diary</a>
       <a href="blog.html">Blog</a>
       <a href="lawbook.html">Lawbook</a>
+      <a href="sitemap.html">Sitemap</a>
     </nav>
   </header>
 
@@ -52,7 +53,7 @@
   <p><strong>The second seat.</strong> The larger seat (llama3.1:8b) told a different story: zero false fails, the identical-bytes pair judged consistently and correctly — and weaker contract discipline, with 6 no-verdicts against the small seat&rsquo;s 3. Size removed the invented-defect noise and loosened the format discipline. Both facts are in the record; neither is rounded away.</p>
   <p><strong>Ground truth.</strong> The deterministic check ran all 30 candidates and tested their output: <strong>30 correct, 0 defective</strong> — the generator had written 30 correct programs, so no reviewer catch was possible, and none is claimed. Scored against truth instead of against the decider, the table reads:</p>
   <ul>
-    <li><strong>Rung 1:</strong> 0 misses — and 2 false refusals. A later diagnostic named the refusing check on both: the lint check, one rule (import order), on code whose output was correct. The decider&rsquo;s strictness has a price, and the record shows it.</li>
+    <li><strong>Rung 1:</strong> 0 misses — and 2 false refusals. A later diagnostic named the refusing check on both: the lint check, one rule &mdash; import order, Ruff&rsquo;s <strong>I001</strong> &mdash; on code whose output was correct. Whether an import-order failure should refuse a candidate at all is a question the record leaves open, awaiting the founder&rsquo;s ruling on the claims. The decider&rsquo;s strictness has a price, and the record shows it.</li>
     <li><strong>Different seat, small (llama3.2:3b):</strong> 0 catches, 6 false alarms, 21 correct, 3 abstentions.</li>
     <li><strong>Same seat (the generator&rsquo;s model):</strong> 0 catches, 2 false alarms — its two fails echoed the decider&rsquo;s refusals onto correct code — 28 correct.</li>
     <li><strong>Different seat, larger (llama3.1:8b):</strong> 0 catches, 1 false alarm, 23 correct, 6 abstentions, 0 misses — the best record of any seat, including the only verdict in either run that sided with a correct candidate against a refusal.</li>
