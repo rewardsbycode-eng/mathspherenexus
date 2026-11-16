@@ -27,6 +27,7 @@
       <a href="prototypes.html">Prototypes</a>
       <a href="diary.html">Diary</a>
       <a href="blog.html">Blog</a>
+      <a href="lawbook.html">Lawbook</a>
     </nav>
   </header>
 
@@ -40,7 +41,7 @@
   <ul>
   <li><strong>39 command-line wizards that run</strong> (<code>wizards/</code>), with 486 commands between them. Each is a separate program; most need nothing beyond Python (see <strong>What you need</strong>).</li>
   <li><strong>An MCP bridge</strong> (<code>mcp/server.py</code>) that lets a model on this machine use 107 of those commands as tools, but only what a person switched on, inside folders a person granted, checked by 9 guard modes, run behind a sandbox wall, and written to a receipts log.</li>
-  <li><strong>75 AI modes</strong>: named prompt texts that <code>compose()</code> combines into one system prompt with a SHA-256 fingerprint. The text is reproducible; what a mode does to a model's answers is not measured.</li>
+  <li><strong>70 AI modes</strong>: named prompt texts that <code>compose()</code> combines into one system prompt with a SHA-256 fingerprint. The registry holds 75 entries in all — the 70 modes, plus 5 guard modes that live in the same registry and are counted with the guard modes, not with the modes. The text is reproducible; what a mode does to a model's answers is not measured.</li>
   <li><strong>The wizard roster:</strong> 110 tool-style wizards in 25 categories, kept as registry data (name, category, description, a function schema). <strong>39 of them have code here; the other 71 are descriptions only and cannot be run.</strong></li>
   </ul>
   <!-- /gen:summary -->
@@ -91,7 +92,7 @@
   <td style="text-align: left;">Works with Ollama. Its model may call only 7 reviewed look-only wizards (76 commands); this is containment, not the bridge's gate (<code>tests/test_godfatherwiz_repl.py</code>)</td>
   </tr>
   <tr>
-  <td style="text-align: left;">Wizard roster: 110 wizards in 25 categories (185 specs with the 75 AI modes)</td>
+  <td style="text-align: left;">Wizard roster: 39 built of 41 planned, in 25 categories (design cards for more stand in the registry; a card is not a wizard until it is built)</td>
   <td style="text-align: left;">Registry data, tested. <strong>39 of the 110 have code here; the other 71 are descriptions only and cannot be run</strong></td>
   </tr>
   <tr>
@@ -99,7 +100,7 @@
   <td style="text-align: left;">Built, tested. The schemas include the 71 roster wizards with no code: a model given them can name tools that do not exist here</td>
   </tr>
   <tr>
-  <td style="text-align: left;">75 AI modes with full prompts (<code>docs/MODES.md</code>) and <code>compose()</code></td>
+  <td style="text-align: left;">70 AI modes with full prompts (<code>docs/MODES.md</code>) and <code>compose()</code> (75 registry entries in all, counting the 5 guard modes)</td>
   <td style="text-align: left;">Built, tested: the prompt text and its SHA-256 fingerprint are reproducible. <strong>What a mode does to a model's answers is not measured</strong></td>
   </tr>
   <tr>
@@ -399,7 +400,7 @@
   <code>PORTED</code> table can run. To give a model only tools that work, use the MCP bridge, which offers only listed commands of
   ported wizards.</p>
   <p>AI modes are instructions, not functions, so the default export leaves them out (<code>include_ai_modes=True</code> adds them). They are registered with <code>deterministic=False</code>, because model output is not deterministic.</p>
-  <p><strong>Renamed modes.</strong> Five modes originally shared a handle with a roster tool wizard, so they were renamed with the same meaning: <code>@chainwiz</code> is now <code>@stepwiz</code>, <code>@legwiz</code> is now <code>@lawwiz</code>, <code>@cachewiz</code> is now <code>@memowiz</code>, <code>@graphqlwiz</code> is now <code>@gqlwiz</code>, <code>@debugwiz</code> is now <code>@rootcausewiz</code>. All 75 modes are registered.</p>
+  <p><strong>Renamed modes.</strong> Five modes originally shared a handle with a roster tool wizard, so they were renamed with the same meaning: <code>@chainwiz</code> is now <code>@stepwiz</code>, <code>@legwiz</code> is now <code>@lawwiz</code>, <code>@cachewiz</code> is now <code>@memowiz</code>, <code>@graphqlwiz</code> is now <code>@gqlwiz</code>, <code>@debugwiz</code> is now <code>@rootcausewiz</code>. All 75 entries are registered.</p>
   <h3>The MCP bridge</h3>
   <p><code>mcp/server.py</code> lets an MCP client use the AI modes as prompts and the ported wizards as tools, on this machine
   (ollmcp is the client verified end to end so far). It needs <code>pip install mcp</code> (version 2), and the wall needs
@@ -750,7 +751,7 @@
   ├── README.md                   # this page; its generated sections come from scripts/gen_readme.py
   ├── src/engine/
   │   ├── wiz_modes_registry.py   # WizardCategory, WizardSpec, WizardRosterRegistry
-  │   ├── ai_modes_data.py        # the 75 modes: handle, category, description
+  │   ├── ai_modes_data.py        # the 75 registry entries: handle, category, description
   │   ├── ai_modes_prompts.py     # the 75 prompts (source of truth)
   │   ├── compose.py              # compose(), fingerprints
   │   ├── custom_modes.py         # your own modes, approved by hash (docs/CUSTOM_MODES.md)

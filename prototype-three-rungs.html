@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prototype: The Three Rungs — The Ladder, Working — MathSphere Nexus</title>
+<link rel="icon" href="seal.webp">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MathSphere Nexus">
+<meta property="og:title" content="Prototype: The Three Rungs — The Ladder, Working">
+<meta property="og:description" content="A working prototype of the Ladder for Wizard Central Pro: a deterministic rung that decides, two model rungs that advise and never veto, a gate that is the only write path, budgets enforced at the grant, and both exits handing work back labeled. Built and run live November 15–16, 2026 — 30 trial candidates, three reviewer seats, and a ground-truth check: 30 correct, 0 defective.">
+<meta property="og:url" content="https://rewardsbycode-eng.github.io/mathspherenexus/prototype-three-rungs.html">
+<meta property="og:image" content="https://rewardsbycode-eng.github.io/mathspherenexus/seal.webp">
+<meta name="twitter:card" content="summary">
+<meta name="description" content="A working prototype of the Ladder for Wizard Central Pro: a deterministic rung that decides, two model rungs that advise and never veto, a gate that is the only write path, budgets enforced at the grant, and both exits handing work back labeled. Built and run live November 15–16, 2026 — 30 trial candidates, three reviewer seats, and a ground-truth check: 30 correct, 0 defective.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="site">
+    <img src="seal.webp" alt="MathSphere Nexus official corporate seal">
+    <span class="name">MathSphere Nexus</span>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="projects.html">Projects</a>
+      <a href="prototypes.html">Prototypes</a>
+      <a href="diary.html">Diary</a>
+      <a href="blog.html">Blog</a>
+      <a href="lawbook.html">Lawbook</a>
+    </nav>
+  </header>
+
+  <h1>The Three Rungs — The Ladder, Working</h1>
+  <p class="meta">A prototype of the Wizard Central Pro AI Modes Toolkit · <strong>Went into implementation: November 15, 2026</strong> · Built and run live November 15–16, 2026, on the owner&rsquo;s machine (the pinned reference machine for this prototype) · Status: <strong>proof of shape</strong> — advance evidence for the REPL build in the roadmap (Phase 10). The product build stands in the roadmap, in its order; this page never calls the prototype the product.</p>
+  <hr class="rule">
+
+  <h2>The idea</h2>
+  <p>When a model writes code for a person, who checks it — and what may the checker do about what it finds? The Ladder is the house&rsquo;s answer, in three rungs:</p>
+  <p><strong>Rung 1 decides.</strong> Deterministic checks — compile, lint, a bounded run judged by exit code — and nothing else. No model sits on this rung. Its verdict is the decision.</p>
+  <p><strong>Rungs 2 and 3 advise.</strong> A model reviews the candidate (Rung 2), and a model checks it against the task&rsquo;s stated requirements, line by line (Rung 3). Their verdicts are shown to the person. They are never a veto: advice informs the person&rsquo;s consent, and the gate — the prototype&rsquo;s only write path — acts on the person&rsquo;s word, not the model&rsquo;s.</p>
+  <p><strong>The budget lives at the grant.</strong> Review costs are drawn against a grant the person created, and the check stands <em>before</em> the model is called — an exhausted grant refuses the call, receipted, instead of discovering the cost afterward. And both ways out of a repair loop hand work back honestly: success returns the passing candidate; exhaustion returns the last candidate <em>labeled failed</em>, with the full record of every try.</p>
+  <p>The prototype was built to test five claims: <strong>(1)</strong> Rung 1 is deterministic. <strong>(2)</strong> Reviewers cannot leak into decisions — structurally, and in behavior. <strong>(3)</strong> A same-seat verdict (the generator&rsquo;s own model, reviewing) differs measurably from a different seat&rsquo;s. <strong>(4)</strong> The budget is enforceable at the grant, not the loop. <strong>(5)</strong> Both exits hand back correctly.</p>
+
+  <h2>How it was run</h2>
+  <p>In slices, each built, run live, and receipted before the next began: <strong>Slice A</strong> — Rung 1 alone, with check sets for Python and Go, and a Rust set run as an extension. <strong>The gate</strong> — the only write path, proven on six scenarios. <strong>Slice B</strong> — the reviewing rung. <strong>Slice C</strong> — the fit rung. <strong>The trials</strong> — 30 candidates written by one model (qwen2.5-coder:7b) over a fixed ten-task set, each judged by Rung 1, by a different seat (llama3.2:3b), and by the generator&rsquo;s own model in a fresh call. <strong>Trial slice 2</strong> — the same 30 candidates re-judged by a larger different seat (llama3.1:8b), with every candidate hash, verdict hash, and prompt hash asserted against the first run before a single verdict was taken. <strong>The ground-truth check</strong> — every candidate actually run, its output tested against what its task asked for. <strong>Slice D</strong> — budgets at the grant, and both exits.</p>
+
+  <h2>The evidence</h2>
+  <p><strong>Determinism (Claim 1).</strong> Each fixture was judged 100 times: one verdict hash per fixture, every time. The Python verdict hashes matched across two machines and two Python versions. Slice A was closed at 10 of 10 by the owner&rsquo;s ruling; the Rust set stands beside the close as an extension run — 15 fixture receipts in two chains, the gate&rsquo;s chain a third.</p>
+  <p><strong>Isolation (Claim 2, structural half).</strong> The review prompt is assembled from exactly three inputs — the task, the candidate, and Rung 1&rsquo;s verdict sheet. The generator&rsquo;s explanation has no parameter, no field, and no side channel into it; the isolation is a shape, not a policy. A verdict that is not exactly <code>PASS</code> or <code>FAIL: reason</code> is receipted as <em>no verdict</em>, with the model&rsquo;s raw answer preserved. Slice C produced the proof of that discipline live: the seat answered by echoing the template&rsquo;s placeholder instead of the requirement number, and the contract held it as no verdict — the receipt (read aloud and checked, field by field) shows both contract breaks, preserved, not smoothed over.</p>
+  <p><strong>The trials (Claims 2 and 3, behavioral half).</strong> Rung 1 passed 28 candidates and refused 2. Against Rung 1, the different seat agreed 22 times and falsely failed 5; the same seat agreed 30 of 30. The five false fails were then adjudicated one by one against the tasks: <strong>all five were false alarms</strong> — including two different invented defects for two candidates that were byte-for-byte identical. The same seat&rsquo;s perfect agreement, read carefully, is concordance with the decider — redundant, not useless; the different seat&rsquo;s disagreements were the signal worth examining, and on examination they were noise.</p>
+  <p><strong>The second seat.</strong> The larger seat (llama3.1:8b) told a different story: zero false fails, the identical-bytes pair judged consistently and correctly — and weaker contract discipline, with 6 no-verdicts against the small seat&rsquo;s 3. Size removed the invented-defect noise and loosened the format discipline. Both facts are in the record; neither is rounded away.</p>
+  <p><strong>Ground truth.</strong> The deterministic check ran all 30 candidates and tested their output: <strong>30 correct, 0 defective</strong> — the generator had written 30 correct programs, so no reviewer catch was possible, and none is claimed. Scored against truth instead of against the decider, the table reads:</p>
+  <ul>
+    <li><strong>Rung 1:</strong> 0 misses — and 2 false refusals. A later diagnostic named the refusing check on both: the lint check, one rule (import order), on code whose output was correct. The decider&rsquo;s strictness has a price, and the record shows it.</li>
+    <li><strong>Different seat, small (llama3.2:3b):</strong> 0 catches, 6 false alarms, 21 correct, 3 abstentions.</li>
+    <li><strong>Same seat (the generator&rsquo;s model):</strong> 0 catches, 2 false alarms — its two fails echoed the decider&rsquo;s refusals onto correct code — 28 correct.</li>
+    <li><strong>Different seat, larger (llama3.1:8b):</strong> 0 catches, 1 false alarm, 23 correct, 6 abstentions, 0 misses — the best record of any seat, including the only verdict in either run that sided with a correct candidate against a refusal.</li>
+  </ul>
+  <p><strong>Budgets and exits (Claims 4 and 5).</strong> Slice D passed on the stub and then live against a real seat: a grant refused the second review <em>before</em> the call was made, receipting the refusal with the remedy; the repair loop handed back the passing candidate on success, and on exhaustion the last candidate labeled failed, with the full nine-try record; the oracle loop kept the same discipline over five rounds. 29 receipts, chain verified.</p>
+
+  <h2>The Terminal Record</h2>
+  <p>The verdict lines and tables from the runs&rsquo; own output, November 15–16, 2026, on the owner&rsquo;s machine:</p>
+  <pre>SLICE A: closed at 10/10 by the owner&rsquo;s ruling (Rust run as extension)
+STEP 3 (THE GATE): PASS — twice, six scenarios, chain verified
+SLICE B: PASS — chain over 6 receipts
+SLICE C: PASS — chain over 7 receipts
+TRIALS RUNNER: PASS — 30 receipts, chain OK
+SLICE D: PASS — stub run, then live run; 29 receipts, chain OK
+TRIALS 2 RUNNER: PASS — 30 receipts, chain OK, all evidence hashes asserted
+
+GROUND TRUTH CHECK: PASS — 30 receipts, chain OK
+ground truth: 30 correct, 0 defective
+Rung 1 vs truth: misses []; false refusals [8, 27]
+different seat (llama3.2:3b): catches=0 false_alarms=6 correct=21 abstentions=3
+same seat (qwen2.5-coder:7b): catches=0 false_alarms=2 correct=28 abstentions=0
+different seat (llama3.1:8b): catches=0 false_alarms=1 correct=23 abstentions=6
+[30 of 30 trials scored from the named second chain]</pre>
+  <p><strong>The parse — how each proved thing is used.</strong> To have code decided, Rung 1 runs it: compile, lint, a bounded run — the verdict is the decision, and its hash is reproducible by anyone holding the candidate (<em>determinism, Slice A</em>). To have it reviewed, Rung 2 reads the task, the candidate, and the verdict sheet — never the generator&rsquo;s account of itself (<em>isolation, Slice B</em>). To check fit, Rung 3 answers requirement by requirement, and any answer off the contract is recorded as no verdict with the raw text kept (<em>Slice C</em>). To spend review, a grant is drawn down before the call, and exhaustion refuses in the open (<em>budget at the grant, Slice D</em>). To leave a repair loop, you carry out either the passing candidate or the failed one, labeled, with every try on record (<em>both exits, Slice D</em>).</p>
+
+  <h2>The house check</h2>
+  <p><strong>Receipts, hash-chained</strong> — every slice, trial, review, refusal, and handback above is a receipt in a chain that verifies; earlier chains are moved aside, timestamped, never deleted. <strong>Standard library only</strong> — the prototype imports nothing outside Python&rsquo;s standard library; the models are reached over the local model server&rsquo;s HTTP interface. <strong>Advise, never veto</strong> — no model&rsquo;s verdict can refuse, pass, or write anything; the gate writes only on the person&rsquo;s act. <strong>Demo discipline</strong> — this page is the documentation half; the slices&rsquo; own test runs are the live half.</p>
+
+  <h2>What this does not prove</h2>
+  <p>Honesty about scope. The trial set contained no defective candidates, so a reviewer&rsquo;s ability to <em>catch</em> a real defect is <strong>untested — not failed, and not proven</strong>; a set with planted defects is the instrument that would test it. Reviewer quality beyond these seats, tasks, and this machine is unmeasured. And the prototype is not the REPL: it is advance evidence for the REPL build (roadmap Phase 10), which will stand or fall on its own runs, in its order.</p>
+  <p><a href="prototypes.html">← All prototypes</a></p>
+
+  <hr class="rule light">
+  <p class="slogan">A command is what you type. The name is what the project is.</p>
+</div>
+<footer class="site">© 2026 MathSphere Nexus</footer>
+</body>
+</html>
