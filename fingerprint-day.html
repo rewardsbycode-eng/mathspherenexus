@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Is my toolkit the real one? — MathSphere Nexus</title>
+<link rel="icon" href="seal.webp">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MathSphere Nexus">
+<meta property="og:title" content="Is my toolkit the real one?">
+<meta property="og:description" content="The design of keepwizard's integrity check was stamped as the design of record: a fingerprint list made once at release from the packaged download itself, anchored in two independent places, checked as exact membership of the whole tree — with its limits stated in the design itself.">
+<meta property="og:url" content="https://rewardsbycode-eng.github.io/mathspherenexus/fingerprint-day.html">
+<meta property="og:image" content="https://rewardsbycode-eng.github.io/mathspherenexus/seal.webp">
+<meta name="twitter:card" content="summary">
+<meta name="description" content="The design of keepwizard's integrity check was stamped as the design of record: a fingerprint list made once at release from the packaged download itself, anchored in two independent places, checked as exact membership of the whole tree — with its limits stated in the design itself.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="site">
+    <img src="seal.webp" alt="MathSphere Nexus official corporate seal">
+    <span class="name">MathSphere Nexus</span>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="projects.html">Projects</a>
+      <a href="prototypes.html">Prototypes</a>
+      <a href="diary.html">Diary</a>
+      <a href="blog.html">Blog</a>
+      <a href="lawbook.html">Lawbook</a>
+      <a href="sitemap.html">Sitemap</a>
+    </nav>
+  </header>
+
+  <h1>Is my toolkit the real one?</h1>
+  <p class="meta">November 16, 2026 — by Alexander Sanchez</p>
+
+  <p>This morning began with the record, not with new invention. The founder had the full job lists for the fleet&rsquo;s last two wizards &mdash; <strong>bonuswizard</strong>, number 40, the witness, and <strong>keepwizard</strong>, number 41, the keeper &mdash; compiled from the project&rsquo;s own saved history, every item with its source and its date, nothing filled in. Reading keepwizard&rsquo;s list brought an open question back to the table. It had been open since October 20: how the keeper&rsquo;s integrity check will actually work. Today it was answered, reviewed, and stamped.</p>
+
+  <p>The check answers the plainest question a user can ask: <em>is my toolkit the real one?</em> It matters here more than most places. Wizard Central&rsquo;s guard modes are code, and edited guard code is no guards &mdash; a toolkit that cannot tell whether its own files are the release&rsquo;s files cannot promise anything about the rest.</p>
+
+  <p><strong>The design, as stamped.</strong> A fingerprint list is made <strong>once, at release, from the exact packaged download</strong> &mdash; after the package itself has been validated, never from a user&rsquo;s installed copy, so nobody can be talked into blessing an altered toolkit by simply regenerating its list. The list never includes itself. Its fingerprint is published in <strong>two independent places</strong>, and the user confirms the match by eye before the first run; if the two publications ever disagree, verification stops. The check itself is <strong>exact membership</strong>: every file the release should contain, present and matching &mdash; and nothing in the tree that should not be there. A toolkit that notices changed files but waves through added ones has not established the thing it claims to establish. And every failure is a named failure &mdash; anchor missing, anchor malformed, lists in conflict, tree not matching &mdash; never a quiet pass.</p>
+
+  <p><strong>The hard question got asked, and the design answers it in its own words.</strong> Who checks the checker? A checker modified to always say &ldquo;all good&rdquo; would defeat the whole arrangement, so the design does not pretend otherwise. It keeps three claims separate &mdash; the list is genuine, the tree matches the list, and the code reporting both is trustworthy &mdash; and it builds the third on a cross-check: two checkers in different seats, each verifying the other&rsquo;s files against the published fingerprint, under assumptions the design states out loud. What even that cannot prove is printed in the design too. This is not a root of trust against a hostile machine, and it does not call itself one.</p>
+
+  <p>The review path is part of the record. One of the house&rsquo;s collaborators, CG, read the design in <strong>three passes</strong>, and each pass found a seam the pass before had missed &mdash; the last one in the house&rsquo;s own draft wording, which claimed more than the construction guarantees and was tightened before the stamp. The founder&rsquo;s ruling this morning made the corrected design the <strong>design of record</strong>.</p>
+
+  <p>Decided is not built, and this entry does not blur the two: the check does not exist yet. It will be built with keepwizard, in its ruled place in the order of work &mdash; after the guard sweep and bonuswizard &mdash; and the one implementation defect already known, a draft that reports unexpected files instead of failing on them, is on the books to be corrected and tested when that build comes.</p>
+
+  <p>Why write it in the diary before a line of it is built? The founder&rsquo;s observation, after a month of keeping this diary: in this house, the things that get written down plainly are the things that get built. The diary is where the design stands in the open, dated, where the work can be checked against it later. Today the fingerprint design stands there.</p>
+
+  <hr class="rule light">
+  <p class="slogan">A command is what you type. The name is what the project is.</p>
+  <p>— Alexander</p>
+  <img class="seal-sign" src="seal.webp" alt="MathSphere Nexus official corporate seal">
+</div>
+<footer class="site">© 2026 MathSphere Nexus</footer>
+</body>
+</html>
