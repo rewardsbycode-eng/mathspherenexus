@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Guard Test Lab — Step 0: The Inventory — MathSphere Nexus</title>
+<link rel="icon" href="seal.webp">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MathSphere Nexus">
+<meta property="og:title" content="Guard Test Lab — Step 0: The Inventory">
+<meta property="og:description" content="Before the MCP Guard Test Lab tests a single guard mode, it counts everything it will rely on: a roster of 19 local models pinned by snapshot, the driver as ruled, and the bridge inventoried in its own words — with proof the counting changed nothing.">
+<meta property="og:url" content="https://rewardsbycode-eng.github.io/mathspherenexus/guard-test-lab-inventory.html">
+<meta property="og:image" content="https://rewardsbycode-eng.github.io/mathspherenexus/seal.webp">
+<meta name="twitter:card" content="summary">
+<meta name="description" content="Before the MCP Guard Test Lab tests a single guard mode, it counts everything it will rely on: a roster of 19 local models pinned by snapshot, the driver as ruled, and the bridge inventoried in its own words — with proof the counting changed nothing.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="site">
+    <img src="seal.webp" alt="MathSphere Nexus official corporate seal">
+    <span class="name">MathSphere Nexus</span>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="projects.html">Projects</a>
+      <a href="demo.html">Demo Records</a>
+      <a href="prototypes.html">Prototypes</a>
+      <a href="diary.html">Diary</a>
+      <a href="blog.html">Blog</a>
+      <a href="lawbook.html">Lawbook</a>
+      <a href="sitemap.html">Sitemap</a>
+    </nav>
+  </header>
+
+  <h1>Guard Test Lab — Step 0: The Inventory</h1>
+  <p class="meta">November 17, 2026 — by Alexander Sanchez</p>
+
+  <p>The MCP Guard Test Lab exists to answer one question with evidence: do the guard modes of the <strong>Wizard Central Pro AI Modes Toolkit</strong> actually enforce — through the real bridge, with real models seated — or do they only appear to? The lab&rsquo;s evidence is never a model&rsquo;s compliance with a prompt. It is the bridge&rsquo;s decision, and whether the tool executed.</p>
+
+  <p>Before any of that can be tested, the lab counts everything it will rely on. That counting is step 0 of the build, and this page is its record: the model roster pinned by snapshot, the driver verified as the one the design ruled, the bridge inventoried in its own words at the exact commit under test — and a proof that the counting itself changed nothing.</p>
+
+  <h2>The roster, pinned</h2>
+
+  <p>Nineteen local models, captured on the Trident on November 17, 2026. Three counts were taken three ways — the model list, the API, and a per-model detail pass — and all three agree at <strong>19</strong>. The roster is pinned to this snapshot: a model added or removed mid-run invalidates the run, and a model that fails stays in the denominator. The pilot — the model the full protocol runs against first — is <strong>llama3.1:8b</strong>.</p>
+
+  <table>
+    <tr><th>Model</th><th>Size</th><th>Family</th><th>Parameters</th><th>Quantization</th></tr>
+    <tr><td>llama3.1:8b</td><td>4.92 GB</td><td>llama</td><td>8.0B</td><td>Q4_K_M</td></tr>
+    <tr><td>qwen2.5-coder:7b</td><td>4.68 GB</td><td>qwen2</td><td>7.6B</td><td>Q4_K_M</td></tr>
+    <tr><td>qwen3.5:2b</td><td>2.68 GB</td><td>qwen35</td><td>1.9B</td><td>Q8_0</td></tr>
+    <tr><td>llama3.2:3b</td><td>2.02 GB</td><td>llama</td><td>3.2B</td><td>Q4_K_M</td></tr>
+    <tr><td>qwen2.5-coder:3b</td><td>1.93 GB</td><td>qwen2</td><td>3.1B</td><td>Q4_K_M</td></tr>
+    <tr><td>starcoder2:3b</td><td>1.71 GB</td><td>starcoder2</td><td>3B</td><td>Q4_0</td></tr>
+    <tr><td>codegemma:2b</td><td>1.55 GB</td><td>gemma</td><td>3B</td><td>Q4_0</td></tr>
+    <tr><td>qwen3:1.7b</td><td>1.36 GB</td><td>qwen3</td><td>2.0B</td><td>Q4_K_M</td></tr>
+    <tr><td>llama3.2:1b</td><td>1.32 GB</td><td>llama</td><td>1.2B</td><td>Q8_0</td></tr>
+    <tr><td>qwen3.5:0.8b</td><td>1.32 GB</td><td>qwen35</td><td>752M</td><td>Q8_0</td></tr>
+    <tr><td>deepseek-r1:1.5b</td><td>1.12 GB</td><td>qwen2</td><td>1.8B</td><td>Q4_K_M</td></tr>
+    <tr><td>qwen2.5-coder:1.5b</td><td>0.99 GB</td><td>qwen2</td><td>1.5B</td><td>Q4_K_M</td></tr>
+    <tr><td>gemma3:1b</td><td>0.81 GB</td><td>gemma3</td><td>1000M</td><td>Q4_K_M</td></tr>
+    <tr><td>deepseek-coder:1.3b</td><td>0.78 GB</td><td>llama</td><td>1B</td><td>Q4_0</td></tr>
+    <tr><td>tinyllama:1.1b</td><td>0.64 GB</td><td>llama</td><td>1B</td><td>Q4_0</td></tr>
+    <tr><td>qwen3:0.6b</td><td>0.52 GB</td><td>qwen3</td><td>752M</td><td>Q4_K_M</td></tr>
+    <tr><td>qwen2.5:0.5b</td><td>0.40 GB</td><td>qwen2</td><td>494M</td><td>Q4_K_M</td></tr>
+    <tr><td>qwen2.5-coder:0.5b</td><td>0.40 GB</td><td>qwen2</td><td>494M</td><td>Q4_K_M</td></tr>
+    <tr><td>gemma3:270m</td><td>0.29 GB</td><td>gemma3</td><td>268M</td><td>Q8_0</td></tr>
+  </table>
+
+  <p>The ladder is deliberate: the lab tests on the weakest models first, down to a 270-million-parameter seat — because a gate that only holds for strong models has not been shown to hold.</p>
+
+  <h2>The driver and the machine</h2>
+
+  <p>The models will be driven by <strong>ollmcp</strong> — the MCP Client for Ollama — version <strong>0.35.1</strong>, the driver the lab&rsquo;s design ruled on, verified from its package metadata (the client itself was never launched for an inventory). The machine is the Trident: Ubuntu 26.04.1, Ollama 0.40.16, with the sandbox machinery the bridge relies on present — Landlock loaded among the kernel&rsquo;s security modules, the seccomp library in place.</p>
+
+  <h2>The bridge, in its own words</h2>
+
+  <p>The system under test is the Pro toolkit at the commit that renamed the guard modes — <code>de2ba22</code> — inventoried by the bridge&rsquo;s own check command, which needs no client and changes nothing:</p>
+
+  <ul>
+    <li><strong>Guard modes: 9 built, all 9 on</strong> — boundaryguard, provenanceguard, envelopeguard, calibrationguard, selfauditguard, secretguard, offlineguard, sizeguard, binaryguard. <strong>14 pending</strong>, listed by the bridge under their registered names — paceguard, persistenceguard, budgetguard, fanoutguard, shellguard, overwriteguard, traversalguard, consentguard, instructionguard, manifestguard, intactguard, redactguard, lookfirstguard, previewguard. In the lab&rsquo;s enforcement battery, a pending mode is recorded as not built — never as a pass.</li>
+    <li><strong>Tools offered: 100</strong> — 39 that work on text they are given, 61 that work on files — across 11 wizards, with the feature switches as shipped: drafts off, code-runs off, receipts on.</li>
+    <li><strong>Prompts offered: 76</strong> — the 75 registry entries and the compose prompt.</li>
+  </ul>
+
+  <h2>The proof nothing moved</h2>
+
+  <p>An inventory that alters what it counts is not an inventory. The bridge&rsquo;s real state folder was measured before the check command ran and after it finished: <strong>18 files, 9,159 bytes — before and after, identical.</strong> The lab will run the bridge under its own separate state folder, built for the lab alone; the real state is never the lab&rsquo;s, and step 0&rsquo;s first proof is that merely looking did not touch it.</p>
+
+  <h2>What an inventory does not prove</h2>
+
+  <p>No guard mode has been tested by anything on this page. An inventory proves the lab knows its own ground — which models, which driver, which bridge, in which state — and nothing about whether enforcement holds. That evidence comes later, in the lab&rsquo;s own order: the lab state and its fixtures, a harness self-test that must pass before any real run, a frozen protocol, a pilot run on llama3.1:8b, then the full roster — and four separate reports, one per battery, published as they land. The counts above are the ground those reports will stand on, stated now so they cannot be quietly restated later.</p>
+
+  <hr class="rule light">
+  <p class="slogan">A command is what you type. The name is what the project is.</p>
+  <p>— Alexander</p>
+  <img class="seal-sign" src="seal.webp" alt="MathSphere Nexus official corporate seal">
+</div>
+<footer class="site">© 2026 MathSphere Nexus</footer>
+</body>
+</html>
