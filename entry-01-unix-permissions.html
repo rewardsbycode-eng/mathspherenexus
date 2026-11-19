@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Entry No. 1 — Unix Permissions: The Complete Number Guide — MathSphere Nexus</title>
+<link rel="icon" href="seal.webp">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MathSphere Nexus">
+<meta property="og:title" content="Entry No. 1 — Unix Permissions: The Complete Number Guide">
+<meta property="og:description" content="Every Unix permission number from 000 to 777: what each digit means, what each common number allows, the exact commands to inspect and set them, and the recommended practice for private, shared, and public files.">
+<meta property="og:url" content="https://rewardsbycode-eng.github.io/mathspherenexus/entry-01-unix-permissions.html">
+<meta property="og:image" content="https://rewardsbycode-eng.github.io/mathspherenexus/seal.webp">
+<meta name="twitter:card" content="summary">
+<meta name="description" content="Every Unix permission number from 000 to 777: what each digit means, what each common number allows, the exact commands to inspect and set them, and the recommended practice for private, shared, and public files.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="site">
+    <img src="seal.webp" alt="MathSphere Nexus official corporate seal">
+    <span class="name">MathSphere Nexus</span>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="projects.html">Projects</a>
+      <a href="demo.html">Demo Records</a>
+      <a href="prototypes.html">Prototypes</a>
+      <a href="diary.html">Diary</a>
+      <a href="blog.html">Blog</a>
+      <a href="mn-dev-guide.html">MN-Dev Guide</a>
+      <a href="lawbook.html">Lawbook</a>
+      <a href="sitemap.html">Sitemap</a>
+    </nav>
+  </header>
+  <p class="meta" style="text-align:center;">MN-Dev Guide — the Universal Workshop</p>
+  <h1>Entry No. 1 — Unix Permissions: The Complete Number Guide</h1>
+  <p class="tagline">Knowledge from the workshop, for every developer.</p>
+  <p>This entry explains every Unix permission number
+  from the lowest (000) to the highest (777): what
+  each digit means, what each common number allows,
+  the exact commands to inspect and set them, and
+  the recommended practice for private, shared, and
+  public files. Everything here applies to any Linux
+  or macOS system.</p>
+  <h2>1. The one idea underneath all of it</h2>
+  <p>Every file and every folder carries permissions for
+  THREE audiences, in a fixed order:</p>
+  <ol>
+  <li><strong>Owner</strong> — the one account that owns it.</li>
+  <li><strong>Group</strong> — the accounts in its group.</li>
+  <li><strong>Others</strong> — every other account on the machine.</li>
+  </ol>
+  <p>For each audience, three actions can be allowed or
+  denied:</p>
+  <ul>
+  <li><strong>Read</strong> — see what is inside.</li>
+  <li><strong>Write</strong> — change it.</li>
+  <li><strong>Execute</strong> — on a file: run it as a program. On a
+    folder: ENTER it and reach what is inside.</li>
+  </ul>
+  <p>A permission number is three digits — one digit per
+  audience, in that order: OWNER, GROUP, OTHERS.
+  Example: 750 means owner 7, group 5, others 0.</p>
+  <h2>2. The eight digits (0–7) — the whole system</h2>
+  <p>Each digit is a sum. Read = 4, Write = 2,
+  Execute = 1. Add the actions you want to allow;
+  the total is the digit.</p>
+  <table>
+  <thead>
+  <tr>
+  <th>Digit</th>
+  <th>Letters</th>
+  <th>Allows</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr>
+  <td>0</td>
+  <td>---</td>
+  <td>Nothing at all</td>
+  </tr>
+  <tr>
+  <td>1</td>
+  <td>--x</td>
+  <td>Execute / enter only</td>
+  </tr>
+  <tr>
+  <td>2</td>
+  <td>-w-</td>
+  <td>Write only (rare alone)</td>
+  </tr>
+  <tr>
+  <td>3</td>
+  <td>-wx</td>
+  <td>Write + execute, no read</td>
+  </tr>
+  <tr>
+  <td>4</td>
+  <td>r--</td>
+  <td>Read only</td>
+  </tr>
+  <tr>
+  <td>5</td>
+  <td>r-x</td>
+  <td>Read + execute, no changes</td>
+  </tr>
+  <tr>
+  <td>6</td>
+  <td>rw-</td>
+  <td>Read + write, no execute</td>
+  </tr>
+  <tr>
+  <td>7</td>
+  <td>rwx</td>
+  <td>Everything: read, write, execute</td>
+  </tr>
+  </tbody>
+  </table>
+  <p>That table is complete. Every permission number
+  ever used — all 512 combinations from 000 to 777 —
+  is just three of these digits side by side. Read
+  any number digit by digit and you know exactly
+  what it allows, for whom.</p>
+  <p>One digit deserves a warning: <strong>write without
+  read</strong> (2) cannot show you a file's contents, but
+  it can still open the file to overwrite it or
+  append to it — a write-only file can be clobbered
+  blind. Rare alone, but never mistake it for
+  protection.</p>
+  <h2>3. Reading what a machine shows you</h2>
+  <ul>
+  <li><code>ls -l</code> shows letters: <code>rwxr-xr-x</code> is 755 —
+    owner rwx (7), group r-x (5), others r-x (5).
+    The very first character is the type: <code>d</code> for a
+    directory, <code>-</code> for a file.</li>
+  <li><code>stat -c '%a %n' &lt;path&gt;</code> shows the number itself
+    (on macOS: <code>stat -f '%Lp %N' &lt;path&gt;</code>).</li>
+  </ul>
+  <h2>4. Files and folders obey the same digits differently</h2>
+  <p>The digits are the same; what the actions DO
+  depends on the kind of thing:</p>
+  <ul>
+  <li><strong>On a file:</strong> read = open and read it; write =
+    change or erase its contents; execute = run it
+    as a program or script.</li>
+  <li><strong>On a folder:</strong> read = list the names inside;
+    write = create, delete, or rename things inside;
+    execute = enter it and reach the things inside.</li>
+  </ul>
+  <p>Two consequences worth knowing:</p>
+  <ul>
+  <li>A folder at 700 with a file at 600 inside is a
+    locked room with a locked drawer: nobody else
+    can even enter the room.</li>
+  <li>A file's own number cannot protect it if the
+    FOLDER is open: write permission on a folder is
+    what allows deleting the files inside it, even
+    files set to 600. Folders matter as much as
+    files — set both.</li>
+  <li>Read on a folder without execute is a
+    half-power: you can list the names inside, but
+    you cannot open, inspect, or use anything in
+    it — names without reach. Listing is not
+    access.</li>
+  </ul>
+  <h2>5. The ladder — lowest to highest</h2>
+  <p>The numbers that actually occur, in order, with
+  what each one means in practice. (Any number not
+  listed is read straight off the digit table in
+  section 2.)</p>
+  <table>
+  <thead>
+  <tr>
+  <th>Number</th>
+  <th>Who can do what</th>
+  <th>Where it belongs</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr>
+  <td>000</td>
+  <td>Nobody, not even the owner, can read, write, or enter</td>
+  <td>A deliberate lockout; the owner can still change the number back</td>
+  </tr>
+  <tr>
+  <td>400</td>
+  <td>Owner reads; nobody writes; nobody else anything</td>
+  <td>A finished file frozen against changes</td>
+  </tr>
+  <tr>
+  <td>444</td>
+  <td>Everyone reads; nobody writes</td>
+  <td>Public read-only</td>
+  </tr>
+  <tr>
+  <td>600</td>
+  <td>Owner reads and writes; group and others NOTHING</td>
+  <td><strong>Private files</strong></td>
+  </tr>
+  <tr>
+  <td>640</td>
+  <td>Owner reads/writes; group reads; others nothing</td>
+  <td>Shared with one trusted group</td>
+  </tr>
+  <tr>
+  <td>644</td>
+  <td>Owner reads/writes; everyone else reads</td>
+  <td>Ordinary public files (web pages, documents)</td>
+  </tr>
+  <tr>
+  <td>660</td>
+  <td>Owner and group read/write; others nothing</td>
+  <td>Group working files</td>
+  </tr>
+  <tr>
+  <td>664</td>
+  <td>Owner and group read/write; others read</td>
+  <td>The default new-file number under umask 002</td>
+  </tr>
+  <tr>
+  <td>700</td>
+  <td>Owner does everything; group and others NOTHING</td>
+  <td><strong>Private folders</strong></td>
+  </tr>
+  <tr>
+  <td>750</td>
+  <td>Owner everything; group read + enter; others nothing</td>
+  <td>A folder one group may look into</td>
+  </tr>
+  <tr>
+  <td>755</td>
+  <td>Owner everything; everyone else read + enter</td>
+  <td>Ordinary public folders and programs</td>
+  </tr>
+  <tr>
+  <td>770</td>
+  <td>Owner and group everything; others nothing</td>
+  <td>A group's private working folder</td>
+  </tr>
+  <tr>
+  <td>775</td>
+  <td>Owner and group everything; others read + enter</td>
+  <td>The default new-folder number under umask 002</td>
+  </tr>
+  <tr>
+  <td>777</td>
+  <td>Everyone can do everything</td>
+  <td>No privacy at all; avoid on anything that matters</td>
+  </tr>
+  </tbody>
+  </table>
+  <h2>6. The fourth digit (a short note)</h2>
+  <p>Some numbers carry a leading fourth digit for
+  special flags: 4 = setuid (run as the owner),
+  2 = setgid (run as the group; on a folder, new
+  files inherit its group), 1 = sticky (on a shared
+  folder, only a file's owner may delete it — the
+  1777 of a public temp folder). Everyday work
+  almost never needs them. They are named here so a
+  four-digit number is never a mystery: read the
+  last three digits by the normal rules.</p>
+  <h2>7. Where a new file's number comes from (umask)</h2>
+  <p>New folders start from 777 and new files from 666,
+  and the shell's <strong>umask</strong> subtracts. A common
+  umask is 002, so new folders arrive at 775 and new
+  files at 664; under umask 022 they arrive at 755
+  and 644. A number a file is born with is not a
+  decision — check what you actually have (section
+  8) and set what you intend.</p>
+  <h2>8. Doing it — the commands, step by step</h2>
+  <p><strong>Inspect one file or folder:</strong></p>
+  <pre><code class="language-bash">stat -c '%a %U:%G %n' path/to/thing
+  </code></pre>
+  <p><strong>Inspect a whole tree (every folder and file,
+  with its number and owner):</strong></p>
+  <pre><code class="language-bash">find path/to/tree -type d -exec stat -c '%a %U:%G %n' {} + | sort -k3
+  find path/to/tree -type f -exec stat -c '%a %U:%G %n' {} + | sort -k3
+  </code></pre>
+  <p><strong>Summarize a tree — how many items carry each
+  number:</strong></p>
+  <pre><code class="language-bash">find path/to/tree -type d -printf '%m\n' | sort | uniq -c | sort -rn
+  find path/to/tree -type f -printf '%m\n' | sort | uniq -c | sort -rn
+  </code></pre>
+  <p><strong>Set a number:</strong></p>
+  <pre><code class="language-bash">chmod 700 path/to/folder
+  chmod 600 path/to/file
+  </code></pre>
+  <p>The same settings in words (u = owner, g = group,
+  o = others):</p>
+  <pre><code class="language-bash">chmod u=rwx,go= path/to/folder
+  chmod u=rw,go= path/to/file
+  </code></pre>
+  <p><strong>Make a whole private tree owner-only — folders
+  to 700, files to 600 — then verify:</strong></p>
+  <pre><code class="language-bash">find path/to/tree -type d -exec chmod 700 {} +
+  find path/to/tree -type f -exec chmod 600 {} +
+  find path/to/tree \( -type d ! -perm 700 -o -type f ! -perm 600 \) -print
+  </code></pre>
+  <p>The last command must print NOTHING: anything it
+  lists is an item that did not take the intended
+  number. Run the inspection again after any change
+  — a change you have not re-read is a change you
+  have not confirmed.</p>
+  <h2>9. Recommended practice</h2>
+  <ul>
+  <li><strong>Private storage</strong> (backups, archives, personal
+    data, keys, anything not meant to be shared):
+    <strong>folders 700, files 600.</strong> This is the most
+    conservative practical posture — stricter either
+    locks the owner out of working files or breaks
+    the writes that backups and updates need.</li>
+  <li><strong>Shared with a trusted group:</strong> folders 770 or
+    750, files 660 or 640, depending on whether the
+    group writes or only reads.</li>
+  <li><strong>Deliberately public</strong> (a web root, published
+    documents): files 644, folders 755 — chosen on
+    purpose, never arrived at by default.</li>
+  <li><strong>Never 777</strong> on anything that matters: it gives
+    every account on the machine full control,
+    including deleting the contents.</li>
+  </ul>
+  <p><strong>The boundary, stated once and plainly:</strong>
+  permissions control OTHER ACCOUNTS on the same
+  machine. They do not protect a drive that is
+  plugged into another machine, and they do not
+  stop the owner account itself — only encryption
+  protects data at rest against physical access.
+  Use permissions for access control; use encryption
+  for theft and loss. A complete setup uses both,
+  each for what it actually does.</p>
+  <h2>10. Worked examples</h2>
+  <ul>
+  <li><strong>A backups folder found at 755</strong> — every
+    account could enter and read it. Tightened:
+    folder to 700, the backup files inside to 600,
+    verified by re-inspection. Same backups, same
+    owner — nobody else can open them now.</li>
+  <li><strong>A private notes file created at 664</strong> — the
+    umask default, readable by everyone. Set to 600:
+    owner-only, and it stays editable by its owner.</li>
+  <li><strong>A shared project folder at 770 with files at
+    660</strong> — the whole team reads and writes, other
+    accounts get nothing. Correct as designed; no
+    change.</li>
+  <li><strong>A web root at 755 with pages at 644</strong> —
+    public on purpose, so the site can be served.
+    Correct as designed; public is a choice, not a
+    default that happened to you.</li>
+  </ul>
+  <p>— End of Entry No. 1 —</p>
+
+  <hr class="rule light">
+  <p class="slogan">A command is what you type. The name is what the project is.</p>
+</div>
+<footer class="site">© 2026 MathSphere Nexus</footer>
+</body>
+</html>

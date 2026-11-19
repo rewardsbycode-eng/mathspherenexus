@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Why the first guide is about permissions — MathSphere Nexus</title>
+<link rel="icon" href="seal.webp">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MathSphere Nexus">
+<meta property="og:title" content="Why the first guide is about permissions">
+<meta property="og:description" content="The Diary marks the site's one new room — the MN-Dev Guide, the Universal Workshop — and explains why its first entry is about Unix permissions: private by default, public by decision.">
+<meta property="og:url" content="https://rewardsbycode-eng.github.io/mathspherenexus/permissions-guide-day.html">
+<meta property="og:image" content="https://rewardsbycode-eng.github.io/mathspherenexus/seal.webp">
+<meta name="twitter:card" content="summary">
+<meta name="description" content="The Diary marks the site's one new room — the MN-Dev Guide, the Universal Workshop — and explains why its first entry is about Unix permissions: private by default, public by decision.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="site">
+    <img src="seal.webp" alt="MathSphere Nexus official corporate seal">
+    <span class="name">MathSphere Nexus</span>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="projects.html">Projects</a>
+      <a href="demo.html">Demo Records</a>
+      <a href="prototypes.html">Prototypes</a>
+      <a href="diary.html">Diary</a>
+      <a href="blog.html">Blog</a>
+      <a href="mn-dev-guide.html">MN-Dev Guide</a>
+      <a href="lawbook.html">Lawbook</a>
+      <a href="sitemap.html">Sitemap</a>
+    </nav>
+  </header>
+  <h1>Why the first guide is about permissions</h1>
+  <p class="tagline">MathSphere Nexus — the Diary</p>
+    <p class="meta">November 18, 2026 — by Alexander Sanchez</p>
+  <p>Today this site grows one new room: the <strong>MN-Dev Guide —
+  the Universal Workshop</strong>, where we publish complete
+  instruction manuals for developers. This <strong>Diary</strong> —
+  the room that was already here, where I write about
+  what we actually run, and why — gets a new entry to
+  mark it.</p>
+  <p>The Guide and the Diary are deliberately separate. A
+  guide teaches the topic itself — everything a reader
+  needs, down to the last command, with nothing of my
+  house mixed in. The Diary is the personal layer: our
+  choices, our reasons, our mistakes and corrections.
+  A diary entry can point at a guide. It never replaces
+  one.</p>
+  <p>So why is Entry No. 1 about something as unglamorous
+  as Unix file permissions?</p>
+  <p>Because everything we build stands on one promise:
+  <strong>generous software, with built-in privacy.</strong> The tools
+  we make are local-first. Your work stays on your
+  machine. Nothing leaves. A promise like that is not a
+  slogan you print — it is a hundred small settings you
+  get right, and the smallest of them is who is allowed
+  to read a file.</p>
+  <p>Here is what we run, and why. On the storage that
+  holds my work, private material is owner-only by
+  default: folders at 700, files at 600 — one person can
+  enter, read, and write, and nobody else on the machine
+  can. Material that is meant to be public is public <em>by
+  choice</em>, set openly, never by accident or by default.
+  That is the whole standard, and it fits in one breath:
+  <strong>private by default, public by decision.</strong></p>
+  <p>The Diary will also be honest about the limits, the
+  way the Guide is. Permissions govern the other
+  accounts on the same machine. They do not stop someone
+  holding the physical drive — that is what encryption
+  is for, and it is a separate layer, with its own
+  decisions still ahead of us. Saying what a protection
+  does <em>not</em> do is part of the protection. People cannot
+  trust a workshop that oversells its own locks.</p>
+  <p>There is a second reason permissions came first. This
+  project keeps records — receipts for what was done,
+  hashes for what a file is — because memory is kind and
+  paper is patient, but a hash does not forget and does
+  not flatter. Before any of that record-keeping means
+  anything, the records themselves have to sit somewhere
+  private. Permissions are the floor the rest of the
+  house stands on. So the floor went in first, and got
+  checked, and got written down where anyone can read
+  how it was done.</p>
+  <p>That is Entry No. 1. It will not be the last — this
+  guide is going to grow, entry by numbered entry, each
+  one complete enough to work from alone. And this Diary
+  will keep the other half of the story: not just how
+  the thing works, but what we chose, and why, and what
+  it cost to choose it carefully.</p>
+  <p>— Alexander</p>
+  <p><em>Read the Guide: <a href="entry-01-unix-permissions.html">MN-Dev Guide, Entry No. 1 — Unix Permissions: The Complete Number Guide</a>.</em></p>
+
+  <hr class="rule light">
+  <p class="slogan">A command is what you type. The name is what the project is.</p>
+  <img class="seal-sign" src="seal.webp" alt="MathSphere Nexus official corporate seal">
+</div>
+<footer class="site">© 2026 MathSphere Nexus</footer>
+</body>
+</html>
